@@ -43,7 +43,6 @@ def Main():
         style="Accent.TButton",
         # command=pass_generator,
     )
-
     # Buttons placing
     tanteoButton.grid(row=0, column=0, pady=15, padx=12, ipady=8)
     biseccionButton.grid(row=1, column=0, pady=15, padx=12, ipady=8)
@@ -56,7 +55,6 @@ def Main():
     # Answer output
     ansOutput = ttk.Entry(af, font=("Helvetica", 15), width="6")
     ansOutput.grid(row=0, column=0, pady=15, padx=15)
-    ansOutput.config(state=DISABLED)
 
     # Iterations Output
     itOutput = ttk.Entry(af, font=("Helvetica", 15), width="6")
