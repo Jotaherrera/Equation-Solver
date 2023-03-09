@@ -7,6 +7,8 @@ from matplotlib import style
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from math import *
+import random as rnd
+import re
 
 
 class App(ttk.Frame):
@@ -84,42 +86,30 @@ class App(ttk.Frame):
         self.insideAnswerFrame.columnconfigure(index=0, weight=1)
 
         # Answer Outputs
-        self.tanteoOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.tanteoOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.tanteoOutput.grid(row=0, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
 
-        self.tanteoIterationsOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.tanteoIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.tanteoIterationsOutput.grid(
             row=0, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.biseccionOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.biseccionOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.biseccionOutput.grid(
             row=1, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.biseccionIterationsOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.biseccionIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.biseccionIterationsOutput.grid(
             row=1, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.reglaFalsaOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.reglaFalsaOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.reglaFalsaOutput.grid(
             row=2, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.reglaFalsaIterationsOutput = ttk.Entry(
-            self.insideAnswerFrame, width=10, state=tk.DISABLED
-        )
+        self.reglaFalsaIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
         self.reglaFalsaIterationsOutput.grid(
             row=2, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
@@ -130,7 +120,10 @@ class App(ttk.Frame):
         self.buttonFrame.columnconfigure(index=0, weight=1)
 
         self.accentbutton = ttk.Button(
-            self.buttonFrame, text="Resolver", style="Accent.TButton"
+            self.buttonFrame,
+            text="Resolver",
+            style="Accent.TButton",
+            command=self.tanteo,
         )
         self.accentbutton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
@@ -151,6 +144,47 @@ class App(ttk.Frame):
         self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
         self.tlb.update()
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+    def tanteo(self):
+        # Reset states
+        self.tanteoOutput.configure(state="normal")
+        self.tanteoIterationsOutput.configure(state="normal")
+        self.tanteoOutput.delete(0, "end")
+        self.tanteoIterationsOutput.delete(0, "end")
+
+        # Generating random number
+        self.xI = rnd.randint(-100, 100)
+
+        # Getting and replacing letter for the random number
+        self.rawEq = str(self.eqEntry.get())
+        self.pattern = re.compile("[a-zA-Z]")
+        self.eqVar = self.pattern.sub("xI", self.rawEq)
+        self.eq = self.eqVar.replace("xI", str(self.xI))
+
+        self.count = 0
+        while True:
+            if eval(self.eq) > 0:
+                self.count += 1
+                self.x1 = self.xI - 0.01
+                self.xI = self.x1
+                self.eq = self.eqVar.replace("xI", str(self.xI))
+                if eval(self.eq) <= 0.001:
+                    self.tanteoOutput.insert(0, round(self.xI, 2))
+                    self.tanteoOutput.configure(state="readonly")
+                    self.tanteoIterationsOutput.insert(0, self.count)
+                    self.tanteoIterationsOutput.configure(state="readonly")
+                    break
+            else:
+                self.count += 1
+                self.x1 = self.xI + 0.01
+                self.xI = self.x1
+                self.eq = self.eqVar.replace("xI", str(self.xI))
+                if eval(self.eq) >= 0.001:
+                    self.tanteoOutput.insert(0, round(self.xI, 2))
+                    self.tanteoOutput.configure(state="readonly")
+                    self.tanteoIterationsOutput.insert(0, self.count)
+                    self.tanteoIterationsOutput.configure(state="readonly")
+                    break
 
 
 if __name__ == "__main__":
