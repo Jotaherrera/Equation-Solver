@@ -171,7 +171,7 @@ if __name__ == "__main__":
     root.tk.call("set_theme", "dark")
 
     # App icon
-    root.iconbitmap("./public/images/function.ico")
+    root.iconbitmap("./public/images/sine.ico")
 
     app = App(root)
     app.pack(fill="both", expand=True)
