@@ -5,7 +5,10 @@
     "Checkbuttons",
     "columnspan",
     "cordinate",
+    "figsize",
+    "fivethirtyeight",
     "matplotlib",
-    "pyplot"
+    "pyplot",
+    "tkagg"
   ]
 }
