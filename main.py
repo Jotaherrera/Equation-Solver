@@ -1,5 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib import style
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+from math import *
 
 
 class App(ttk.Frame):
@@ -11,17 +18,12 @@ class App(ttk.Frame):
             self.columnconfigure(index=index, weight=1)
             self.rowconfigure(index=index, weight=1)
 
-        # Create value lists
-        self.option_menu_list = ["", "OptionMenu", "Option 1", "Option 2"]
-        self.combo_list = ["Combobox", "Editable item 1", "Editable item 2"]
-        self.readonly_combo_list = ["Readonly combobox", "Item 1", "Item 2"]
-
-        # Create control variables
+        # Create control variables for checkboxes
         self.tanteoVar = tk.BooleanVar()
         self.biseccionVar = tk.BooleanVar()
         self.reglaFalsaVar = tk.BooleanVar()
 
-        # Create widgets :)
+        # Create widgets
         self.setup_widgets()
 
     def setup_widgets(self):
@@ -132,20 +134,49 @@ class App(ttk.Frame):
         )
         self.accentbutton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
+        # Graph Frame
+        self.graphFrame = ttk.Frame(self)
+        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(30, 10), rowspan=4)
+        self.graphFrame.columnconfigure(index=0, weight=1)
+
+        # Graph
+        self.fig = Figure(figsize=(4, 5.2), dpi=100)
+        self.ax = self.fig.add_subplot(111)
+        self.fig.tight_layout()
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+        # Navigation Bar
+        self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
+        self.tlb.update()
+        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
 
 if __name__ == "__main__":
+    # Shortcut name to call tkinter
     root = tk.Tk()
+
+    # App name
     root.title("Equation Solver")
+
+    # Making resizable or not
     root.resizable(False, False)
 
+    # Graph style
+    style.use("fivethirtyeight")
+
+    # App theme
     root.tk.call("source", "./src/Tk Theme/azure.tcl")
     root.tk.call("set_theme", "dark")
 
+    # App icon
     root.iconbitmap("./public/images/function.ico")
 
     app = App(root)
     app.pack(fill="both", expand=True)
 
+    # Always appear on screen center
     root.update()
     root.minsize(root.winfo_width(), root.winfo_height())
     x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
