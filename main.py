@@ -123,7 +123,7 @@ class App(ttk.Frame):
             self.buttonFrame,
             text="Resolver",
             style="Accent.TButton",
-            command=self.tanteo,
+            command=self.checked,
         )
         self.accentbutton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
@@ -144,6 +144,9 @@ class App(ttk.Frame):
         self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
         self.tlb.update()
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+    def checked(self):
+        self.tanteo() if self.tanteoVar.get() == True else None
 
     def tanteo(self):
         # Reset states
