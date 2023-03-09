@@ -2,13 +2,19 @@
   "python.formatting.provider": "black",
   "cSpell.words": [
     "accentbutton",
+    "axhline",
+    "axvline",
     "Checkbuttons",
     "columnspan",
     "cordinate",
     "figsize",
     "fivethirtyeight",
+    "linewidth",
     "matplotlib",
     "pyplot",
-    "tkagg"
+    "tkagg",
+    "xlim",
+    "ylim",
+    "zorder"
   ]
 }
