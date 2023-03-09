@@ -12,6 +12,7 @@ import re
 
 
 class App(ttk.Frame):
+    # Construction method
     def __init__(self, parent):
         ttk.Frame.__init__(self)
 
@@ -28,6 +29,7 @@ class App(ttk.Frame):
         # Create widgets
         self.setup_widgets()
 
+    # Function to setup widgets on the app
     def setup_widgets(self):
         # Equation Entry Frame
         self.entryFrame = ttk.LabelFrame(
@@ -123,7 +125,7 @@ class App(ttk.Frame):
             self.buttonFrame,
             text="Resolver",
             style="Accent.TButton",
-            command=self.checked,
+            command=self.solve,
         )
         self.accentbutton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
@@ -137,59 +139,241 @@ class App(ttk.Frame):
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
+
+        # Setting the predefined zoom
+        self.ax.set_xlim(-50, 50)
+        self.ax.set_ylim(-50, 50)
+
+        # Drawing the canvas
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+        # Drawing x and y axes
+        self.ax.axhline(0, color="black", linewidth="1.5")
+        self.ax.axvline(0, color="black", linewidth="1.5")
 
         # Navigation Bar
         self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
         self.tlb.update()
         self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
-    def checked(self):
-        self.tanteo() if self.tanteoVar.get() == True else None
+        # Connecting the scrolling action
+        self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
 
-    def tanteo(self):
+        # Set the cross as the initial element
+        self.tlb.pan()
+
+    # Function to scroll with the mouse
+    def on_scroll(self, event):
+        # get the current x and y limits of the plot
+        xlim = self.ax.get_xlim()
+        ylim = self.ax.get_ylim()
+
+        # calculate the new x and y limits based on the scroll direction
+        if event.button == "up":
+            # zoom in
+            x_center = (xlim[0] + xlim[1]) / 2
+            y_center = (ylim[0] + ylim[1]) / 2
+            x_range = (xlim[1] - xlim[0]) / 2
+            y_range = (ylim[1] - ylim[0]) / 2
+            self.ax.set_xlim(x_center - x_range / 2, x_center + x_range / 2)
+            self.ax.set_ylim(y_center - y_range / 2, y_center + y_range / 2)
+        elif event.button == "down":
+            # zoom out
+            x_center = (xlim[0] + xlim[1]) / 2
+            y_center = (ylim[0] + ylim[1]) / 2
+            x_range = (xlim[1] - xlim[0]) * 2
+            y_range = (ylim[1] - ylim[0]) * 2
+            self.ax.set_xlim(x_center - x_range / 2, x_center + x_range / 2)
+            self.ax.set_ylim(y_center - y_range / 2, y_center + y_range / 2)
+
+        # redraw the plot
+        self.fig.canvas.draw()
+
+    # Mother function bound to the button
+    def solve(self):
+        eqVar = self.getEntry()
+
+        zero = self.checked()
+        self.getGraphic(eqVar, zero)
+
+    # Function to clear the entries
+    def cleanEntries(self):
         # Reset states
         self.tanteoOutput.configure(state="normal")
         self.tanteoIterationsOutput.configure(state="normal")
         self.tanteoOutput.delete(0, "end")
         self.tanteoIterationsOutput.delete(0, "end")
 
+        self.biseccionOutput.configure(state="normal")
+        self.biseccionIterationsOutput.configure(state="normal")
+        self.biseccionOutput.delete(0, "end")
+        self.biseccionIterationsOutput.delete(0, "end")
+
+        self.reglaFalsaOutput.configure(state="normal")
+        self.reglaFalsaIterationsOutput.configure(state="normal")
+        self.reglaFalsaOutput.delete(0, "end")
+        self.reglaFalsaIterationsOutput.delete(0, "end")
+
+    # Function to check which function/s is/are selected
+    def checked(self):
+        # Reset states
+        self.cleanEntries()
+
+        if self.tanteoVar.get() == True:
+            zero = self.tanteo()
+        if self.biseccionVar.get() == True:
+            zero = self.biseccion()
+        if self.reglaFalsaVar.get() == True:
+            zero = self.reglaFalsa()
+
+        return zero
+
+    # Function to get the entry equation
+    def getEntry(self):
+        rawEq = str(self.eqEntry.get())
+        pattern = re.compile("[a-zA-Z]")
+        eqVar = pattern.sub("xI", rawEq)
+
+        return eqVar
+
+    # Function to generate the random numbers for biseccion and regla falsa
+    def rndNumbers(self, eqVar):
+        xLow = rnd.randint(-100, 100)
+
+        eqL = eqVar.replace("xI", str(xLow))
+        while eval(eqL) > 0:
+            xLow = rnd.randint(-100, 100)
+            eqL = eqVar.replace("xI", str(xLow))
+
+        xHigh = rnd.randint(xLow, 100)
+
+        eqH = eqVar.replace("xI", str(xHigh))
+        while eval(eqH) < 0:
+            xHigh = rnd.randint(xLow, 100)
+            eqH = eqVar.replace("xI", str(xHigh))
+
+        return xLow, xHigh
+
+    def tanteo(self):
+        # Get equation entry
+        eqVar = self.getEntry()
+
         # Generating random number
-        self.xI = rnd.randint(-100, 100)
+        xI = rnd.randint(-100, 100)
 
-        # Getting and replacing letter for the random number
-        self.rawEq = str(self.eqEntry.get())
-        self.pattern = re.compile("[a-zA-Z]")
-        self.eqVar = self.pattern.sub("xI", self.rawEq)
-        self.eq = self.eqVar.replace("xI", str(self.xI))
+        # Initial replacing
+        eq = eqVar.replace("xI", str(xI))
 
-        self.count = 0
+        counter = 0
         while True:
-            if eval(self.eq) > 0:
-                self.count += 1
-                self.x1 = self.xI - 0.01
-                self.xI = self.x1
-                self.eq = self.eqVar.replace("xI", str(self.xI))
-                if eval(self.eq) <= 0.001:
-                    self.tanteoOutput.insert(0, round(self.xI, 2))
+            if eval(eq) > 0:
+                counter += 1
+                x1 = xI - 0.01
+                xI = x1
+                eq = eqVar.replace("xI", str(xI))
+                if eval(eq) <= 0.001:
+                    self.tanteoOutput.insert(0, round(xI, 2))
                     self.tanteoOutput.configure(state="readonly")
-                    self.tanteoIterationsOutput.insert(0, self.count)
+                    self.tanteoIterationsOutput.insert(0, counter)
                     self.tanteoIterationsOutput.configure(state="readonly")
-                    break
+                    return xI
             else:
-                self.count += 1
-                self.x1 = self.xI + 0.01
-                self.xI = self.x1
-                self.eq = self.eqVar.replace("xI", str(self.xI))
-                if eval(self.eq) >= 0.001:
-                    self.tanteoOutput.insert(0, round(self.xI, 2))
+                counter += 1
+                x1 = xI + 0.01
+                xI = x1
+                eq = eqVar.replace("xI", str(xI))
+                if eval(eq) >= 0.001:
+                    self.tanteoOutput.insert(0, round(xI, 2))
                     self.tanteoOutput.configure(state="readonly")
-                    self.tanteoIterationsOutput.insert(0, self.count)
+                    self.tanteoIterationsOutput.insert(0, counter)
                     self.tanteoIterationsOutput.configure(state="readonly")
-                    break
+                    return xI
+
+    def biseccion(self):
+        # Get entry
+        eqVar = self.getEntry()
+
+        # Get random numbers
+        xLow, xHigh = self.rndNumbers(eqVar)
+
+        counter = 0
+        while True:
+            counter += 1
+            xMiddle = (xHigh + xLow) / 2
+
+            eq = eqVar.replace("xI", str(xMiddle))
+
+            if eval(eq) > 0:
+                xHigh = xMiddle
+            else:
+                xLow = xMiddle
+
+            if abs(eval(eq)) <= 0.001:
+                self.biseccionOutput.insert(0, round(xMiddle, 2))
+                self.biseccionOutput.configure(state="readonly")
+                self.biseccionIterationsOutput.insert(0, counter)
+                self.biseccionIterationsOutput.configure(state="readonly")
+                return xMiddle
+
+    def reglaFalsa(self):
+        eqVar = self.getEntry()
+
+        xLow, xHigh = self.rndNumbers(eqVar)
+
+        counter = 0
+        while True:
+            counter += 1
+
+            eqL = eqVar.replace("xI", str(xLow))
+            eqH = eqVar.replace("xI", str(xHigh))
+
+            xMiddle = xLow - (eval(eqL) * (xHigh - xLow) / (eval(eqH) - eval(eqL)))
+            eqM = eqVar.replace("xI", str(xMiddle))
+
+            if eval(eqM) > 0:
+                xHigh = xMiddle
+            else:
+                xLow = xMiddle
+
+            if abs(eval(eqM)) <= 0.001:
+                self.reglaFalsaOutput.insert(0, round(xMiddle, 2))
+                self.reglaFalsaOutput.configure(state="readonly")
+                self.reglaFalsaIterationsOutput.insert(0, counter)
+                self.reglaFalsaIterationsOutput.configure(state="readonly")
+                return xMiddle
+
+    # Function make the graphic based on the function
+    def getGraphic(self, eqVar, zeros):
+        def restart():
+            self.ax.clear()
+            self.ax.set_xlim(-50, 50)
+            self.ax.set_ylim(-50, 50)
+            self.ax.axhline(0, color="black", linewidth="1.5")
+            self.ax.axvline(0, color="black", linewidth="1.5")
+            self.canvas.draw()
+
+        # Graph function
+        def f(x):
+            return eval(eqVar.replace("xI", str(x)))
+
+        # Restart the graph to its initial state
+        restart()
+
+        # Defining the range for x
+        x = range(-1000, 1000)
+        # List comprehension fro the range of y
+        y = [f(i) for i in x]
+        # Drawing the plot
+        self.ax.plot(x, y)
+        # Draw the red point
+        self.ax.scatter(zeros, 0, color="red", zorder=10)
+        # Showing plot and updating canvas
+        plt.show()
+        self.canvas.draw()
 
 
+# Python entry Point
 if __name__ == "__main__":
     # Shortcut name to call tkinter
     root = tk.Tk()
@@ -210,6 +394,7 @@ if __name__ == "__main__":
     # App icon
     root.iconbitmap("./public/images/sine.ico")
 
+    # Instancing object
     app = App(root)
     app.pack(fill="both", expand=True)
 
@@ -220,4 +405,5 @@ if __name__ == "__main__":
     y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
     root.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
 
+    # Main loop function
     root.mainloop()
