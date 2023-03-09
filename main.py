@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib import style
@@ -192,10 +191,15 @@ class App(ttk.Frame):
 
     # Mother function bound to the button
     def solve(self):
+        # Get the entry
         eqVar = self.getEntry()
 
-        zero = self.checked()
-        self.getGraphic(eqVar, zero)
+        # Check if there is something on the entry
+        if eqVar is not None and eqVar != "":
+            zero = self.checked()
+            self.getGraphic(eqVar, zero)
+        else:
+            print("its empty")
 
     # Function to clear the entries
     def cleanEntries(self):
