@@ -198,8 +198,6 @@ class App(ttk.Frame):
         if eqVar is not None and eqVar != "":
             zero = self.checked()
             self.getGraphic(eqVar, zero)
-        else:
-            print("its empty")
 
     # Function to clear the entries
     def cleanEntries(self):
