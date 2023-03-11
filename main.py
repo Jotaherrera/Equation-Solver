@@ -233,8 +233,11 @@ class App(ttk.Frame):
 
     # Function to get the entry equation
     def getEntry(self):
+        # Get equation from entry box
         rawEq = str(self.eqEntry.get())
+        # Change x for xI
         eqVar = rawEq.replace("x", "xI").replace("X", "xI")
+        # Wrap every x raised to square power in abs()
         eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
         return eqVar
 
