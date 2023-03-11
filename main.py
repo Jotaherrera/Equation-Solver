@@ -234,9 +234,8 @@ class App(ttk.Frame):
     # Function to get the entry equation
     def getEntry(self):
         rawEq = str(self.eqEntry.get())
-        pattern = re.compile("[a-zA-Z]")
-        eqVar = pattern.sub("xI", rawEq)
-
+        eqVar = rawEq.replace("x", "xI").replace("X", "xI")
+        eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
         return eqVar
 
     # Function to generate the random numbers for biseccion and regla falsa
