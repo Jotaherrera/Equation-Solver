@@ -242,17 +242,16 @@ class App(ttk.Frame):
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar):
         xLow = rnd.randint(-100, 100)
-
-        eqL = eqVar.replace("xI", str(xLow))
-        while eval(eqL) > 0:
-            xLow = rnd.randint(-100, 100)
-            eqL = eqVar.replace("xI", str(xLow))
-
         xHigh = rnd.randint(xLow, 100)
 
+        eqL = eqVar.replace("xI", str(xLow))
         eqH = eqVar.replace("xI", str(xHigh))
-        while eval(eqH) < 0:
+
+        while (eval(eqL) * eval(eqH)) >= 0:
+            xLow = rnd.randint(-100, 100)
             xHigh = rnd.randint(xLow, 100)
+
+            eqL = eqVar.replace("xI", str(xLow))
             eqH = eqVar.replace("xI", str(xHigh))
 
         return xLow, xHigh
