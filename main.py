@@ -243,18 +243,21 @@ class App(ttk.Frame):
 
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar):
+        # Get a random low value
         xLow = rnd.randint(-100, 100)
-        xHigh = rnd.randint(xLow, 100)
-
-        eqL = eqVar.replace("xI", str(xLow))
-        eqH = eqVar.replace("xI", str(xHigh))
-
-        while (eval(eqL) * eval(eqH)) >= 0:
+        # Replace random values in the equation
+        equationLow = eqVar.replace("xI", str(xLow))
+        while eval(equationLow) > 0:
             xLow = rnd.randint(-100, 100)
-            xHigh = rnd.randint(xLow, 100)
+            equationLow = eqVar.replace("xI", str(xLow))
 
-            eqL = eqVar.replace("xI", str(xLow))
-            eqH = eqVar.replace("xI", str(xHigh))
+        # Get a random high value
+        xHigh = rnd.randint(xLow, 100)
+        # Replace random values in the equation
+        equationHigh = eqVar.replace("xI", str(xHigh))
+        while eval(equationHigh) < 0:
+            xHigh = rnd.randint(xLow, 100)
+            equationHigh = eqVar.replace("xI", str(xHigh))
 
         return xLow, xHigh
 
@@ -328,10 +331,14 @@ class App(ttk.Frame):
         while True:
             counter += 1
 
-            eqL = eqVar.replace("xI", str(xLow))
-            eqH = eqVar.replace("xI", str(xHigh))
+            equationLow = eqVar.replace("xI", str(xLow))
+            equationHigh = eqVar.replace("xI", str(xHigh))
 
-            xMiddle = xLow - (eval(eqL) * (xHigh - xLow) / (eval(eqH) - eval(eqL)))
+            xMiddle = xLow - (
+                eval(equationLow)
+                * (xHigh - xLow)
+                / (eval(equationHigh) - eval(equationLow))
+            )
             eqM = eqVar.replace("xI", str(xMiddle))
 
             if eval(eqM) > 0:
