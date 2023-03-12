@@ -272,24 +272,40 @@ class App(ttk.Frame):
         eq = eqVar.replace("xI", str(xI))
 
         counter = 0
-        while True:
-            if eval(eq) > 0:
-                counter += 1
-                x1 = xI - 0.01
-                xI = x1
-                eq = eqVar.replace("xI", str(xI))
-                if eval(eq) <= 0.001:
+        if xI >= 0:  # if xI is positive or zero
+            while True:
+                if eval(eq) > 0:
+                    counter += 1
+                    x1 = xI - 0.001
+                    xI = x1
+                    eq = eqVar.replace("xI", str(xI))
+                elif eval(eq) < 0:
+                    counter += 1
+                    x1 = xI + 0.001
+                    xI = x1
+                    eq = eqVar.replace("xI", str(xI))
+
+                if abs(eval(eq)) <= 0.001:
                     self.tanteoOutput.insert(0, round(xI, 2))
                     self.tanteoOutput.configure(state="readonly")
                     self.tanteoIterationsOutput.insert(0, counter)
                     self.tanteoIterationsOutput.configure(state="readonly")
                     return xI
-            else:
-                counter += 1
-                x1 = xI + 0.01
-                xI = x1
-                eq = eqVar.replace("xI", str(xI))
-                if eval(eq) >= 0.001:
+
+        else:  # if xI is negative
+            while True:
+                if eval(eq) > 0:
+                    counter += 1
+                    x1 = xI + 0.001
+                    xI = x1
+                    eq = eqVar.replace("xI", str(xI))
+                elif eval(eq) < 0:
+                    counter += 1
+                    x1 = xI - 0.001
+                    xI = x1
+                    eq = eqVar.replace("xI", str(xI))
+
+                if abs(eval(eq)) <= 0.001:
                     self.tanteoOutput.insert(0, round(xI, 2))
                     self.tanteoOutput.configure(state="readonly")
                     self.tanteoIterationsOutput.insert(0, counter)
