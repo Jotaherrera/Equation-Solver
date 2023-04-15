@@ -12,6 +12,7 @@
     "linewidth",
     "matplotlib",
     "pyplot",
+    "steffensen",
     "tkagg",
     "xlim",
     "ylim",
