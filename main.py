@@ -184,14 +184,24 @@ class App(ttk.Frame):
         self.buttonFrame = ttk.Frame(self)
         self.buttonFrame.grid(row=3, column=0, padx=20, pady=(5, 20), sticky="nsew")
         self.buttonFrame.columnconfigure(index=0, weight=1)
+        self.buttonFrame.columnconfigure(index=1, weight=1)
 
-        self.accentbutton = ttk.Button(
+        self.solveButton = ttk.Button(
             self.buttonFrame,
             text="Resolver",
             style="Accent.TButton",
             command=self.solve,
         )
-        self.accentbutton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
+        self.solveButton.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
+
+        # Report button
+        self.reportButton = ttk.Button(
+            self.buttonFrame,
+            text="Reporte",
+            style="Accent.TButton",
+            command=self.solve,
+        )
+        self.reportButton.grid(row=0, column=1, padx=(5, 0), pady=0, sticky="nsew")
 
         # Graph Frame
         self.graphFrame = ttk.Frame(self)
