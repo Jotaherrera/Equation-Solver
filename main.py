@@ -24,6 +24,9 @@ class App(ttk.Frame):
         self.tanteoVar = tk.BooleanVar()
         self.biseccionVar = tk.BooleanVar()
         self.reglaFalsaVar = tk.BooleanVar()
+        self.nRVar = tk.BooleanVar()
+        self.secanteVar = tk.BooleanVar()
+        self.steffensenVar = tk.BooleanVar()
 
         # Create widgets
         self.setup_widgets()
@@ -40,6 +43,18 @@ class App(ttk.Frame):
         # Equation Entry
         self.eqEntry = ttk.Entry(self.entryFrame)
         self.eqEntry.grid(row=0, column=0, padx=5, pady=(10, 10), sticky="ew")
+
+        # Derivative Equation
+        self.derivativeEntry = ttk.Entry(self.entryFrame)
+        self.derivativeEntry.grid(row=1, column=0, padx=5, pady=(10, 10), sticky="ew")
+
+        # set a placeholder text
+        self.derivativeEntry.insert(0, "Derivative Equation")
+        # make the Entry widget uneditable
+        self.derivativeEntry.configure(state="disabled")
+
+        # set the font of the Entry widget to have reduced opacity and italicized text
+        self.derivativeEntry.configure(font=("", 9, "italic"), foreground="#BBBBBB")
 
         # Create a Frame for the Checkbuttons
         self.check_frame = ttk.LabelFrame(
@@ -63,6 +78,21 @@ class App(ttk.Frame):
         )
         self.reglaFalsaCheck.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
 
+        self.nRCheck = ttk.Checkbutton(
+            self.check_frame, text="N. R", variable=self.nRVar
+        )
+        self.nRCheck.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+
+        self.secanteCheck = ttk.Checkbutton(
+            self.check_frame, text="Secante", variable=self.nRVar
+        )
+        self.secanteCheck.grid(row=1, column=1, padx=5, pady=10, sticky="nsew")
+
+        self.steffensenCheck = ttk.Checkbutton(
+            self.check_frame, text="Steffensen", variable=self.nRVar
+        )
+        self.steffensenCheck.grid(row=2, column=1, padx=5, pady=10, sticky="nsew")
+
         # Method, Answers and Iteration Frame
         self.answersFrame = ttk.LabelFrame(
             self,
@@ -81,9 +111,18 @@ class App(ttk.Frame):
         self.reglaFalsaLabel = ttk.Label(self.answersFrame, text="R. Falsa")
         self.reglaFalsaLabel.grid(row=2, column=0, pady=10, columnspan=2, sticky="nsew")
 
+        self.nRLabel = ttk.Label(self.answersFrame, text="N. R")
+        self.nRLabel.grid(row=3, column=0, pady=10, columnspan=2, sticky="nsew")
+
+        self.secanteLabel = ttk.Label(self.answersFrame, text="Secante")
+        self.secanteLabel.grid(row=4, column=0, pady=10, columnspan=2, sticky="nsew")
+
+        self.steffensenLabel = ttk.Label(self.answersFrame, text="Steffensen")
+        self.steffensenLabel.grid(row=5, column=0, pady=10, columnspan=2, sticky="nsew")
+
         # Inside Answer Frame
         self.insideAnswerFrame = ttk.Frame(self.answersFrame)
-        self.insideAnswerFrame.grid(row=0, column=2, padx=10, sticky="nsew", rowspan=3)
+        self.insideAnswerFrame.grid(row=0, column=2, padx=10, sticky="nsew", rowspan=7)
         self.insideAnswerFrame.columnconfigure(index=0, weight=1)
 
         # Answer Outputs
@@ -115,6 +154,32 @@ class App(ttk.Frame):
             row=2, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
+        self.nROutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.nROutput.grid(row=3, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
+
+        self.nRIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.nRIterationsOutput.grid(
+            row=3, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
+        )
+
+        self.secanteOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.secanteOutput.grid(row=4, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
+
+        self.secanteIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.secanteIterationsOutput.grid(
+            row=4, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
+        )
+
+        self.steffensenOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.steffensenOutput.grid(
+            row=6, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
+        )
+
+        self.steffensenIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.steffensenIterationsOutput.grid(
+            row=6, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
+        )
+
         # Solve Button
         self.buttonFrame = ttk.Frame(self)
         self.buttonFrame.grid(row=3, column=0, padx=20, pady=(5, 20), sticky="nsew")
@@ -134,7 +199,7 @@ class App(ttk.Frame):
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
-        self.fig = Figure(figsize=(4, 5.2), dpi=100)
+        self.fig = Figure(figsize=(5, 7), dpi=100)
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
@@ -226,6 +291,12 @@ class App(ttk.Frame):
         if self.biseccionVar.get() == True:
             zero = self.biseccion()
         if self.reglaFalsaVar.get() == True:
+            zero = self.reglaFalsa()
+        if self.nRVar.get() == True:
+            zero = self.reglaFalsa()
+        if self.secanteVar.get() == True:
+            zero = self.reglaFalsa()
+        if self.steffensenVar.get() == True:
             zero = self.reglaFalsa()
 
         return zero
