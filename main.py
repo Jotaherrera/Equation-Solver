@@ -209,7 +209,7 @@ class App(ttk.Frame):
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
-        self.fig = Figure(figsize=(4.7, 6.1), dpi=100)
+        self.fig = Figure(figsize=(4.5, 4.8), dpi=100)
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
@@ -490,7 +490,7 @@ if __name__ == "__main__":
     root.title("Equation Solver")
 
     # Making resizable or not
-    root.resizable(True, True)
+    root.resizable(False, False)
 
     # Graph style
     style.use("fivethirtyeight")
