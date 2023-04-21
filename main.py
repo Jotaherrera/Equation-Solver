@@ -209,7 +209,9 @@ class App(ttk.Frame):
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
-        self.fig = Figure(figsize=(4, 6.1), dpi=100)  # 4.7 6.1 for big screen
+        self.fig = Figure(
+            figsize=(4.7, 4.8), dpi=100
+        )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
