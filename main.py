@@ -16,9 +16,9 @@ class App(ttk.Frame):
         ttk.Frame.__init__(self)
 
         # Make the app responsive
-        for index in [0, 1, 2]:
-            self.columnconfigure(index=index, weight=1)
-            self.rowconfigure(index=index, weight=1)
+        # for index in [0, 1, 2]:
+        #     self.columnconfigure(index=index, weight=1)
+        #     self.rowconfigure(index=index, weight=1)
 
         # Create control variables for checkboxes
         self.tanteoVar = tk.BooleanVar()
@@ -205,13 +205,11 @@ class App(ttk.Frame):
 
         # Graph Frame
         self.graphFrame = ttk.Frame(self)
-        self.graphFrame.grid(
-            row=0, column=1, padx=(0, 20), pady=(10, 10), rowspan=4, sticky="nsew"
-        )
+        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(10, 10), rowspan=4)
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
-        self.fig = Figure(figsize=(4.7, 6.1), dpi=100)  # 4.7 6.1 for big screen
+        self.fig = Figure(figsize=(4, 6.1), dpi=100)  # 4.7 6.1 for big screen
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
@@ -231,9 +229,7 @@ class App(ttk.Frame):
         # Navigation Bar
         self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
         self.tlb.update()
-        self.canvas.get_tk_widget().pack(
-            side="top", fill="both", expand=True, pady=(9, 4)
-        )
+        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
 
         # Connecting the scrolling action
         self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
@@ -492,7 +488,7 @@ if __name__ == "__main__":
     root.title("Equation Solver")
 
     # Making resizable or not
-    root.resizable(False, False)
+    root.resizable(True, True)
 
     # Graph style
     style.use("fivethirtyeight")
@@ -510,11 +506,10 @@ if __name__ == "__main__":
 
     # Always appear on screen center
     root.update()
-    # root.minsize(root.winfo_width(), root.winfo_height())
-    # x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
-    # y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
-    # root.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
-    root.geometry("1200x900")
+    root.minsize(root.winfo_width(), root.winfo_height())
+    x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
+    y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
+    root.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
 
     # Main loop function
     root.mainloop()
