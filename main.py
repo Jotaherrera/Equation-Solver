@@ -267,12 +267,12 @@ class App(ttk.Frame):
     # Mother function bound to the button
     def solve(self):
         # Get the entry
-        eqVar = self.getEntry()
+        eqVar, degree = self.getEntry()
 
         # Check if there is something on the entry
         if eqVar is not None and eqVar != "":
-            zero = self.checked()
-            self.getGraphic(eqVar, zero)
+            zeros = self.checked()
+            self.getGraphic(eqVar, zeros)
 
     # Function to clear the entries
     def cleanEntries(self):
@@ -298,19 +298,19 @@ class App(ttk.Frame):
         self.cleanEntries()
 
         if self.tanteoVar.get() == True:
-            zero = self.tanteo()
+            zeros = self.tanteo()
         if self.biseccionVar.get() == True:
-            zero = self.biseccion()
+            zeros = self.biseccion()
         if self.reglaFalsaVar.get() == True:
-            zero = self.reglaFalsa()
+            zeros = self.reglaFalsa()
         if self.nRVar.get() == True:
-            zero = self.nR()
+            zeros = self.nR()
         if self.secanteVar.get() == True:
-            zero = self.secante()
+            zeros = self.secante()
         if self.steffensenVar.get() == True:
-            zero = self.steffensen()
+            zeros = self.steffensen()
 
-        return zero
+        return zeros
 
     # Function to get the entry equation
     def getEntry(self):
@@ -318,9 +318,17 @@ class App(ttk.Frame):
         rawEq = str(self.eqEntry.get())
         # Change x for xI
         eqVar = rawEq.replace("x", "xI").replace("X", "xI")
+
+        # Get equation degree
+        match = re.search(r"\*\*?\s*(\d+)", str(eqVar))
+        if match:
+            degree = int(match.group(1))
+        else:
+            degree = 1
+
         # Wrap every x raised to square power in abs()
         eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
-        return eqVar
+        return eqVar, degree
 
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar):
@@ -342,60 +350,104 @@ class App(ttk.Frame):
 
         return xLow, xHigh
 
+    def getSeed(self, roots):
+        while True:
+            x0 = rnd.randint(-10, 10)
+            if x0 not in roots:
+                return x0
+
+    def verifyRoots(self, roots, counters, num, count):
+        if round(num, 2) not in roots:
+            roots.append(round(num, 2))
+            counters.append(count)
+
+    def cleanArray(self, arr, threshold):
+        cleaned_arr = arr.copy()
+        for i in range(len(cleaned_arr)):
+            for j in range(i + 1, len(cleaned_arr)):
+                # Compute the similarity between the two values.
+                similarity = abs(cleaned_arr[i] - cleaned_arr[j])
+                # If the similarity is greater than the threshold, remove the
+                # second value from the array.
+                if similarity < threshold:
+                    cleaned_arr.pop(j)
+
+        return sorted(cleaned_arr)
+
+    def giveAnswers(self, methodOutput, methodIterationsOutput, roots, counters):
+        methodOutput.insert(0, sorted(roots))
+        methodOutput.configure(state="readonly")
+        methodIterationsOutput.insert(0, counters)
+        methodIterationsOutput.configure(state="readonly")
+
     def tanteo(self):
+        roots = []
+        counters = []
+
         # Get equation entry
-        eqVar = self.getEntry()
+        eqVar, degree = self.getEntry()
 
-        # Generating random number
-        xI = rnd.randint(-100, 100)
+        bigCount = 0
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
 
-        # Initial replacing
-        eq = eqVar.replace("xI", str(xI))
+            # Generating random number
+            x1 = 0
+            xI = self.getSeed(roots)
 
-        counter = 0
-        if xI >= 0:  # if xI is positive or zero
-            while True:
-                if eval(eq) > 0:
-                    counter += 1
-                    x1 = xI - 0.001
-                    xI = x1
-                    eq = eqVar.replace("xI", str(xI))
-                elif eval(eq) < 0:
-                    counter += 1
-                    x1 = xI + 0.001
-                    xI = x1
-                    eq = eqVar.replace("xI", str(xI))
+            # Initial replacing
+            eq = eqVar.replace("xI", str(xI))
+            if xI >= 0:  # if xI is positive or zero
+                while True:
+                    if eval(eq) > 0:
+                        counter += 1
+                        x1 = xI - 0.001
+                        xI = x1
+                        eq = eqVar.replace("xI", str(xI))
+                    elif eval(eq) < 0:
+                        counter += 1
+                        x1 = xI + 0.001
+                        xI = x1
+                        eq = eqVar.replace("xI", str(xI))
 
-                if abs(eval(eq)) <= 0.001:
-                    self.tanteoOutput.insert(0, round(xI, 2))
-                    self.tanteoOutput.configure(state="readonly")
-                    self.tanteoIterationsOutput.insert(0, counter)
-                    self.tanteoIterationsOutput.configure(state="readonly")
-                    return xI
+                    if abs(eval(eq)) <= 0.001:
+                        self.verifyRoots(roots, counters, xI, counter)
+                        break
 
-        else:  # if xI is negative
-            while True:
-                if eval(eq) > 0:
-                    counter += 1
-                    x1 = xI + 0.001
-                    xI = x1
-                    eq = eqVar.replace("xI", str(xI))
-                elif eval(eq) < 0:
-                    counter += 1
-                    x1 = xI - 0.001
-                    xI = x1
-                    eq = eqVar.replace("xI", str(xI))
+                    if counter > 1000:
+                        break
 
-                if abs(eval(eq)) <= 0.001:
-                    self.tanteoOutput.insert(0, round(xI, 2))
-                    self.tanteoOutput.configure(state="readonly")
-                    self.tanteoIterationsOutput.insert(0, counter)
-                    self.tanteoIterationsOutput.configure(state="readonly")
-                    return xI
+            else:  # if xI is negative
+                while True:
+                    if eval(eq) > 0:
+                        counter += 1
+                        x1 = xI + 0.001
+                        xI = x1
+                        eq = eqVar.replace("xI", str(xI))
+                    elif eval(eq) < 0:
+                        counter += 1
+                        x1 = xI - 0.001
+                        xI = x1
+                        eq = eqVar.replace("xI", str(xI))
+
+                    if abs(eval(eq)) <= 0.001:
+                        self.verifyRoots(roots, counters, xI, counter)
+                        break
+
+                    if counter > 1000:
+                        break
+            if bigCount > 200:
+                break
+        self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.tanteoOutput, self.tanteoIterationsOutput, roots, counters
+        )
+        return roots
 
     def biseccion(self):
         # Get entry
-        eqVar = self.getEntry()
+        eqVar, degree = self.getEntry()
 
         # Get random numbers
         xLow, xHigh = self.rndNumbers(eqVar)
@@ -420,7 +472,7 @@ class App(ttk.Frame):
                 return xMiddle
 
     def reglaFalsa(self):
-        eqVar = self.getEntry()
+        eqVar, degree = self.getEntry()
 
         xLow, xHigh = self.rndNumbers(eqVar)
 
@@ -474,7 +526,8 @@ class App(ttk.Frame):
         # Drawing the plot
         self.ax.plot(x, y)
         # Draw the red point
-        self.ax.scatter(zeros, 0, color="red", zorder=10)
+        for zero in zeros:
+            self.ax.scatter(zero, 0, color="red", zorder=10)
         # Showing plot and updating canvas
         plt.show()
         self.canvas.draw()
