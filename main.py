@@ -205,17 +205,14 @@ class App(ttk.Frame):
 
         # Graph Frame
         self.graphFrame = ttk.Frame(self)
-        self.graphFrame.grid(row=0, column=1, padx=(0, 20), rowspan=5)
+        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(25, 10), rowspan=5)
 
         # Graph
-        if root.winfo_screenheight() < 1080:
-            self.fig = Figure(
-                figsize=(4.7, 5), dpi=100
-            )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
-        else:
-            self.fig = Figure(
-                figsize=(4.7, 6.1), dpi=100
-            )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
+
+        self.fig = Figure(
+            figsize=(4.7, 5.6), dpi=100
+        )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
+
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         print(f"Screen width: {screen_width} pixels")
