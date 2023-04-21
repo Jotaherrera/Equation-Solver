@@ -37,7 +37,7 @@ class App(ttk.Frame):
         self.entryFrame = ttk.LabelFrame(
             self, text="Ingrese el Polinomio", padding=(20, 10)
         )
-        self.entryFrame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        self.entryFrame.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
         self.entryFrame.columnconfigure(index=0, weight=1)
 
         # Equation Entry
@@ -71,17 +71,17 @@ class App(ttk.Frame):
         self.biseccionCheck = ttk.Checkbutton(
             self.check_frame, text="Bisección", variable=self.biseccionVar
         )
-        self.biseccionCheck.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
+        self.biseccionCheck.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
 
         self.reglaFalsaCheck = ttk.Checkbutton(
             self.check_frame, text="Regla Falsa", variable=self.reglaFalsaVar
         )
-        self.reglaFalsaCheck.grid(row=2, column=0, padx=5, pady=10, sticky="nsew")
+        self.reglaFalsaCheck.grid(row=0, column=2, padx=5, pady=10, sticky="nsew")
 
         self.nRCheck = ttk.Checkbutton(
             self.check_frame, text="N. R", variable=self.nRVar
         )
-        self.nRCheck.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
+        self.nRCheck.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
         self.secanteCheck = ttk.Checkbutton(
             self.check_frame, text="Secante", variable=self.nRVar
@@ -91,7 +91,7 @@ class App(ttk.Frame):
         self.steffensenCheck = ttk.Checkbutton(
             self.check_frame, text="Steffensen", variable=self.nRVar
         )
-        self.steffensenCheck.grid(row=2, column=1, padx=5, pady=10, sticky="nsew")
+        self.steffensenCheck.grid(row=1, column=2, padx=5, pady=10, sticky="nsew")
 
         # Method, Answers and Iteration Frame
         self.answersFrame = ttk.LabelFrame(
@@ -99,7 +99,7 @@ class App(ttk.Frame):
             text="    Método          Respuesta        Iteraciones         ",
             padding=(20, 10),
         )
-        self.answersFrame.grid(row=2, column=0, padx=20, pady=20, sticky="nsew")
+        self.answersFrame.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
 
         # Method Label
         self.tanteoLabel = ttk.Label(self.answersFrame, text="Tanteo")
@@ -205,11 +205,11 @@ class App(ttk.Frame):
 
         # Graph Frame
         self.graphFrame = ttk.Frame(self)
-        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(30, 10), rowspan=4)
+        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(10, 10), rowspan=4)
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
-        self.fig = Figure(figsize=(5, 7), dpi=100)
+        self.fig = Figure(figsize=(4.7, 6.1), dpi=100)
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
@@ -229,7 +229,9 @@ class App(ttk.Frame):
         # Navigation Bar
         self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
         self.tlb.update()
-        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+        self.canvas.get_tk_widget().pack(
+            side="top", fill="both", expand=True, pady=(9, 4)
+        )
 
         # Connecting the scrolling action
         self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
@@ -488,7 +490,7 @@ if __name__ == "__main__":
     root.title("Equation Solver")
 
     # Making resizable or not
-    root.resizable(False, False)
+    root.resizable(True, True)
 
     # Graph style
     style.use("fivethirtyeight")
