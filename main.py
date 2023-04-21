@@ -205,12 +205,12 @@ class App(ttk.Frame):
 
         # Graph Frame
         self.graphFrame = ttk.Frame(self)
-        self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(10, 10), rowspan=4)
+        self.graphFrame.grid(row=0, column=1, padx=(0, 20), rowspan=4)
         self.graphFrame.columnconfigure(index=0, weight=1)
 
         # Graph
         self.fig = Figure(
-            figsize=(4.7, 6), dpi=100
+            figsize=(4.7, 5.93), dpi=100
         )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
@@ -222,7 +222,7 @@ class App(ttk.Frame):
 
         # Drawing the canvas
         self.canvas.draw()
-        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+        self.canvas.get_tk_widget().grid(row=0, column=0, pady=(0, 9.5), sticky="nsew")
 
         # Drawing x and y axes
         self.ax.axhline(0, color="black", linewidth="1.5")
