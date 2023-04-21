@@ -84,12 +84,12 @@ class App(ttk.Frame):
         self.nRCheck.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
         self.secanteCheck = ttk.Checkbutton(
-            self.check_frame, text="Secante", variable=self.nRVar
+            self.check_frame, text="Secante", variable=self.secanteVar
         )
         self.secanteCheck.grid(row=1, column=1, padx=5, pady=10, sticky="nsew")
 
         self.steffensenCheck = ttk.Checkbutton(
-            self.check_frame, text="Steffensen", variable=self.nRVar
+            self.check_frame, text="Steffensen", variable=self.steffensenVar
         )
         self.steffensenCheck.grid(row=1, column=2, padx=5, pady=10, sticky="nsew")
 
@@ -208,15 +208,7 @@ class App(ttk.Frame):
         self.graphFrame.grid(row=0, column=1, padx=(0, 20), pady=(25, 10), rowspan=5)
 
         # Graph
-
-        self.fig = Figure(
-            figsize=(4.7, 5.6), dpi=100
-        )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
-
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        print(f"Screen width: {screen_width} pixels")
-        print(f"Screen height: {screen_height} pixels")
+        self.fig = Figure(figsize=(4.7, 5.6), dpi=100)
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
@@ -312,11 +304,11 @@ class App(ttk.Frame):
         if self.reglaFalsaVar.get() == True:
             zero = self.reglaFalsa()
         if self.nRVar.get() == True:
-            zero = self.nRVar()
+            zero = self.nR()
         if self.secanteVar.get() == True:
-            zero = self.secanteVar()
+            zero = self.secante()
         if self.steffensenVar.get() == True:
-            zero = self.steffensenVar()
+            zero = self.steffensen()
 
         return zero
 
