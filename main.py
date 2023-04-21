@@ -16,9 +16,9 @@ class App(ttk.Frame):
         ttk.Frame.__init__(self)
 
         # Make the app responsive
-        # for index in [0, 1, 2]:
-        #     self.columnconfigure(index=index, weight=1)
-        #     self.rowconfigure(index=index, weight=1)
+        for index in [0, 1, 2]:
+            self.columnconfigure(index=index, weight=1)
+            self.rowconfigure(index=index, weight=1)
 
         # Create control variables for checkboxes
         self.tanteoVar = tk.BooleanVar()
@@ -210,7 +210,7 @@ class App(ttk.Frame):
 
         # Graph
         self.fig = Figure(
-            figsize=(4.7, 4.8), dpi=100
+            figsize=(4.7, 6.1), dpi=100
         )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
@@ -222,16 +222,18 @@ class App(ttk.Frame):
 
         # Drawing the canvas
         self.canvas.draw()
-        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
 
         # Drawing x and y axes
         self.ax.axhline(0, color="black", linewidth="1.5")
         self.ax.axvline(0, color="black", linewidth="1.5")
 
         # Navigation Bar
-        self.tlb = NavigationToolbar2Tk(self.canvas, self.graphFrame)
+        self.tlb = NavigationToolbar2Tk(
+            self.canvas, self.graphFrame, pack_toolbar=False
+        )
         self.tlb.update()
-        self.canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+        self.tlb.grid(row=1, column=0, sticky="nsew")
 
         # Connecting the scrolling action
         self.fig.canvas.mpl_connect("scroll_event", self.on_scroll)
@@ -305,11 +307,11 @@ class App(ttk.Frame):
         if self.reglaFalsaVar.get() == True:
             zero = self.reglaFalsa()
         if self.nRVar.get() == True:
-            zero = self.reglaFalsa()
+            zero = self.nRVar()
         if self.secanteVar.get() == True:
-            zero = self.reglaFalsa()
+            zero = self.secanteVar()
         if self.steffensenVar.get() == True:
-            zero = self.reglaFalsa()
+            zero = self.steffensenVar()
 
         return zero
 
