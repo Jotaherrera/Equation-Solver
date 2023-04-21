@@ -208,9 +208,18 @@ class App(ttk.Frame):
         self.graphFrame.grid(row=0, column=1, padx=(0, 20), rowspan=5)
 
         # Graph
-        self.fig = Figure(
-            figsize=(4.7, 5.93), dpi=100
-        )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
+        if root.winfo_screenheight() < 1080:
+            self.fig = Figure(
+                figsize=(4.7, 5), dpi=100
+            )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
+        else:
+            self.fig = Figure(
+                figsize=(4.7, 6.1), dpi=100
+            )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        print(f"Screen width: {screen_width} pixels")
+        print(f"Screen height: {screen_height} pixels")
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
