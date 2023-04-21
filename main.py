@@ -221,7 +221,7 @@ class App(ttk.Frame):
 
         # Drawing the canvas
         self.canvas.draw()
-        self.canvas.get_tk_widget().grid(row=0, column=0, pady=(0, 9.5), sticky="nsew")
+        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
 
         # Drawing x and y axes
         self.ax.axhline(0, color="black", linewidth="1.5")
