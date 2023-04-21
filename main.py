@@ -16,9 +16,9 @@ class App(ttk.Frame):
         ttk.Frame.__init__(self)
 
         # Make the app responsive
-        # for index in [0, 1, 2]:
-        #     self.columnconfigure(index=index, weight=1)
-        #     self.rowconfigure(index=index, weight=1)
+        for index in [0, 1, 2]:
+            self.columnconfigure(index=index, weight=1)
+            self.rowconfigure(index=index, weight=1)
 
         # Create control variables for checkboxes
         self.tanteoVar = tk.BooleanVar()
@@ -492,7 +492,7 @@ if __name__ == "__main__":
     root.title("Equation Solver")
 
     # Making resizable or not
-    root.resizable(True, True)
+    root.resizable(False, False)
 
     # Graph style
     style.use("fivethirtyeight")
@@ -510,10 +510,11 @@ if __name__ == "__main__":
 
     # Always appear on screen center
     root.update()
-    root.minsize(root.winfo_width(), root.winfo_height())
-    x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
-    y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
-    root.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
+    # root.minsize(root.winfo_width(), root.winfo_height())
+    # x_cordinate = int((root.winfo_screenwidth() / 2) - (root.winfo_width() / 2))
+    # y_cordinate = int((root.winfo_screenheight() / 2) - (root.winfo_height() / 2))
+    # root.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
+    root.geometry("1200x900")
 
     # Main loop function
     root.mainloop()
