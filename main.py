@@ -488,7 +488,7 @@ if __name__ == "__main__":
     root.title("Equation Solver")
 
     # Making resizable or not
-    root.resizable(True, True)
+    root.resizable(False, False)
 
     # Graph style
     style.use("fivethirtyeight")
