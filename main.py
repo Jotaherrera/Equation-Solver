@@ -96,7 +96,7 @@ class App(ttk.Frame):
         # Method, Answers and Iteration Frame
         self.answersFrame = ttk.LabelFrame(
             self,
-            text="    Método          Respuesta        Iteraciones         ",
+            text="    Método                    Respuestas                Iteraciones         ",
             padding=(20, 10),
         )
         self.answersFrame.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
@@ -126,7 +126,7 @@ class App(ttk.Frame):
         self.insideAnswerFrame.columnconfigure(index=0, weight=1)
 
         # Answer Outputs
-        self.tanteoOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.tanteoOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.tanteoOutput.grid(row=0, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
 
         self.tanteoIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
@@ -134,7 +134,7 @@ class App(ttk.Frame):
             row=0, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.biseccionOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.biseccionOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.biseccionOutput.grid(
             row=1, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
@@ -144,7 +144,7 @@ class App(ttk.Frame):
             row=1, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.reglaFalsaOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.reglaFalsaOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.reglaFalsaOutput.grid(
             row=2, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
@@ -154,7 +154,7 @@ class App(ttk.Frame):
             row=2, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.nROutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.nROutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.nROutput.grid(row=3, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
 
         self.nRIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
@@ -162,7 +162,7 @@ class App(ttk.Frame):
             row=3, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.secanteOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.secanteOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.secanteOutput.grid(row=4, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
 
         self.secanteIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
@@ -170,7 +170,7 @@ class App(ttk.Frame):
             row=4, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
 
-        self.steffensenOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.steffensenOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.steffensenOutput.grid(
             row=6, column=0, padx=(10, 0), pady=(8, 0), sticky="ew"
         )
