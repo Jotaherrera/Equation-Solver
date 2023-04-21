@@ -210,7 +210,7 @@ class App(ttk.Frame):
 
         # Graph
         self.fig = Figure(
-            figsize=(4.7, 6.1), dpi=100
+            figsize=(4.7, 6), dpi=100
         )  # 4.7 6.1 for big screen, 4.7, 4,8 for laptop
         self.ax = self.fig.add_subplot(111)
         self.fig.tight_layout()
