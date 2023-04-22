@@ -523,6 +523,12 @@ class App(ttk.Frame):
                 self.reglaFalsaIterationsOutput.configure(state="readonly")
                 return xMiddle
 
+    def newtonRaphson(self):
+        pass
+
+    def secante(self):
+        pass
+
     def steffensen(self):
         counters = []
         roots = []
