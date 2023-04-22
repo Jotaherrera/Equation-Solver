@@ -341,8 +341,9 @@ class App(ttk.Frame):
         else:
             degree = 1
 
-        # Wrap every x raised to square power in abs()
-        eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
+        if (degree % 2) == 0:
+            eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
+
         return eqVar, degree
 
     # Function to generate the random numbers for biseccion and regla falsa
@@ -545,7 +546,7 @@ class App(ttk.Frame):
                     eqX1 = eQ.replace("xI", str(x1))
 
                     if abs(eval(eqX1)) <= 0.00001:
-                        self.verifyRoots(roots, counters, x0, count)
+                        self.verifyRoots(roots, counters, x1, count)
                         break
                     else:
                         x0 = x1
