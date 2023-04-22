@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib import style
@@ -266,6 +267,17 @@ class App(ttk.Frame):
 
     # Mother function bound to the button
     def solve(self):
+        self.solveButton.config(state=tk.DISABLED)
+        self.reportButton.config(state=tk.DISABLED)
+        self.tanteoCheck.config(state=tk.DISABLED)
+        self.biseccionCheck.config(state=tk.DISABLED)
+        self.reglaFalsaCheck.config(state=tk.DISABLED)
+        self.nRCheck.config(state=tk.DISABLED)
+        self.secanteCheck.config(state=tk.DISABLED)
+        self.steffensenCheck.config(state=tk.DISABLED)
+
+        self.popup = self.show_popup()
+
         # Get the entry
         eqVar, degree = self.getEntry()
 
@@ -273,6 +285,39 @@ class App(ttk.Frame):
         if eqVar is not None and eqVar != "":
             zeros = self.checked()
             self.getGraphic(eqVar, zeros)
+
+        self.popup.destroy()
+        self.solveButton.config(state=tk.NORMAL)
+        self.reportButton.config(state=tk.NORMAL)
+        self.tanteoCheck.config(state=tk.NORMAL)
+        self.biseccionCheck.config(state=tk.NORMAL)
+        self.reglaFalsaCheck.config(state=tk.NORMAL)
+        self.nRCheck.config(state=tk.NORMAL)
+        self.secanteCheck.config(state=tk.NORMAL)
+        self.steffensenCheck.config(state=tk.NORMAL)
+
+    # Show a loading popup
+    def show_popup(self):
+        self.popup = tk.Toplevel()
+        self.popup.title("Cargando...")
+        self.popup.geometry("200x100")
+
+        ttk.Label(self.popup, text="Cargando...").pack(pady=10)
+        ttk.Progressbar(self.popup, mode="indeterminate").pack(pady=10)
+        self.popup.transient(master=self)
+        self.popup.grab_set()
+
+        self.popup.update()
+        self.popup.minsize(self.popup.winfo_width(), self.popup.winfo_height())
+        x_cordinate = int(
+            (self.popup.winfo_screenwidth() / 2) - (self.popup.winfo_width() / 2)
+        )
+        y_cordinate = int(
+            (self.popup.winfo_screenheight() / 2) - (self.popup.winfo_height() / 2)
+        )
+        self.popup.geometry("+{}+{}".format(x_cordinate, y_cordinate - 20))
+        self.popup.update()
+        return self.popup
 
     # Function to clear the entries
     def cleanEntries(self):
@@ -347,20 +392,16 @@ class App(ttk.Frame):
         return eqVar, degree
 
     # Function to generate the random numbers for biseccion and regla falsa
-    def rndNumbers(self, eqVar):
-        # Get a random low value
+    def rndNumbers(self, eqVar, roots):
         xLow = rnd.randint(-100, 100)
-        # Replace random values in the equation
         equationLow = eqVar.replace("xI", str(xLow))
-        while eval(equationLow) > 0:
+        while eval(equationLow) > 0 and xLow not in roots:
             xLow = rnd.randint(-100, 100)
             equationLow = eqVar.replace("xI", str(xLow))
 
-        # Get a random high value
         xHigh = rnd.randint(xLow, 100)
-        # Replace random values in the equation
         equationHigh = eqVar.replace("xI", str(xHigh))
-        while eval(equationHigh) < 0:
+        while eval(equationHigh) < 0 and xHigh not in roots:
             xHigh = rnd.randint(xLow, 100)
             equationHigh = eqVar.replace("xI", str(xHigh))
 
@@ -459,38 +500,56 @@ class App(ttk.Frame):
                     if counter > 1000:
                         break
             if bigCount > 200:
+                if len(roots) == 0:
+                    messagebox.showinfo(
+                        title="Info",
+                        message="Se supero el número de iteraciones por tanteo, no se pudo resolver por este método.",
+                    )
+                    return
                 break
+
         roots = self.cleanArray(roots, 0.1)
         self.giveAnswers(
             self.tanteoOutput, self.tanteoIterationsOutput, roots, counters
         )
+
         return roots
 
     def biseccion(self):
-        # Get entry
+        roots = []
+        counters = []
+        bigCount = 0
         eqVar, degree = self.getEntry()
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
+            xLow, xHigh = self.rndNumbers(eqVar, roots)
 
-        # Get random numbers
-        xLow, xHigh = self.rndNumbers(eqVar)
+            while True:
+                counter += 1
+                xMiddle = (xHigh + xLow) / 2
 
-        counter = 0
-        while True:
-            counter += 1
-            xMiddle = (xHigh + xLow) / 2
+                eq = eqVar.replace("xI", str(xMiddle))
 
-            eq = eqVar.replace("xI", str(xMiddle))
+                if eval(eq) > 0:
+                    xHigh = xMiddle
+                else:
+                    xLow = xMiddle
 
-            if eval(eq) > 0:
-                xHigh = xMiddle
-            else:
-                xLow = xMiddle
+                if abs(eval(eq)) <= 0.00001:
+                    self.verifyRoots(roots, counters, xMiddle, counter)
+                    break
 
-            if abs(eval(eq)) <= 0.001:
-                self.biseccionOutput.insert(0, round(xMiddle, 2))
-                self.biseccionOutput.configure(state="readonly")
-                self.biseccionIterationsOutput.insert(0, counter)
-                self.biseccionIterationsOutput.configure(state="readonly")
-                return xMiddle
+                if counter > 10000:
+                    break
+            if bigCount > 500:
+                break
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.biseccionOutput, self.biseccionIterationsOutput, roots, counters
+        )
+
+        return roots
 
     def reglaFalsa(self):
         eqVar, degree = self.getEntry()
