@@ -96,7 +96,7 @@ class App(ttk.Frame):
         # Method, Answers and Iteration Frame
         self.answersFrame = ttk.LabelFrame(
             self,
-            text="    Método                    Respuestas                Iteraciones         ",
+            text="    Método                    Respuestas              Prom. Iteraciones  ",
             padding=(20, 10),
         )
         self.answersFrame.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
@@ -129,9 +129,9 @@ class App(ttk.Frame):
         self.tanteoOutput = ttk.Entry(self.insideAnswerFrame, width=20)
         self.tanteoOutput.grid(row=0, column=0, padx=(10, 0), pady=(8, 0), sticky="ew")
 
-        self.tanteoIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=10)
+        self.tanteoIterationsOutput = ttk.Entry(self.insideAnswerFrame, width=13)
         self.tanteoIterationsOutput.grid(
-            row=0, column=1, padx=(10, 0), pady=(8, 0), sticky="ew"
+            row=0, column=1, padx=(10, 0), pady=(10, 0), sticky="ew"
         )
 
         self.biseccionOutput = ttk.Entry(self.insideAnswerFrame, width=20)
@@ -292,6 +292,21 @@ class App(ttk.Frame):
         self.reglaFalsaOutput.delete(0, "end")
         self.reglaFalsaIterationsOutput.delete(0, "end")
 
+        self.nROutput.configure(state="normal")
+        self.nRIterationsOutput.configure(state="normal")
+        self.nROutput.delete(0, "end")
+        self.nRIterationsOutput.delete(0, "end")
+
+        self.secanteOutput.configure(state="normal")
+        self.secanteIterationsOutput.configure(state="normal")
+        self.secanteOutput.delete(0, "end")
+        self.secanteIterationsOutput.delete(0, "end")
+
+        self.steffensenOutput.configure(state="normal")
+        self.steffensenIterationsOutput.configure(state="normal")
+        self.steffensenOutput.delete(0, "end")
+        self.steffensenIterationsOutput.delete(0, "end")
+
     # Function to check which function/s is/are selected
     def checked(self):
         # Reset states
@@ -350,9 +365,15 @@ class App(ttk.Frame):
 
         return xLow, xHigh
 
-    def getSeed(self, roots):
+    def getIntSeed(self, roots):
         while True:
             x0 = rnd.randint(-10, 10)
+            if x0 not in roots:
+                return x0
+
+    def getUniformSeed(self, roots):
+        while True:
+            x0 = rnd.uniform(-10, 10)
             if x0 not in roots:
                 return x0
 
@@ -361,23 +382,17 @@ class App(ttk.Frame):
             roots.append(round(num, 2))
             counters.append(count)
 
-    def cleanArray(self, arr, threshold):
-        cleaned_arr = arr.copy()
-        for i in range(len(cleaned_arr)):
-            for j in range(i + 1, len(cleaned_arr)):
-                # Compute the similarity between the two values.
-                similarity = abs(cleaned_arr[i] - cleaned_arr[j])
-                # If the similarity is greater than the threshold, remove the
-                # second value from the array.
-                if similarity < threshold:
-                    cleaned_arr.pop(j)
-
-        return sorted(cleaned_arr)
+    def cleanArray(self, arr, margin):
+        return sorted(
+            [arr[0]]
+            + [arr[i] for i in range(1, len(arr)) if abs(arr[i] - arr[i - 1]) > margin]
+        )
 
     def giveAnswers(self, methodOutput, methodIterationsOutput, roots, counters):
+        averageCounter = sum(counters) / len(counters)
         methodOutput.insert(0, sorted(roots))
         methodOutput.configure(state="readonly")
-        methodIterationsOutput.insert(0, counters)
+        methodIterationsOutput.insert(0, averageCounter)
         methodIterationsOutput.configure(state="readonly")
 
     def tanteo(self):
@@ -394,7 +409,7 @@ class App(ttk.Frame):
 
             # Generating random number
             x1 = 0
-            xI = self.getSeed(roots)
+            xI = self.getIntSeed(roots)
 
             # Initial replacing
             eq = eqVar.replace("xI", str(xI))
@@ -439,7 +454,7 @@ class App(ttk.Frame):
                         break
             if bigCount > 200:
                 break
-        self.cleanArray(roots, 0.1)
+        roots = self.cleanArray(roots, 0.1)
         self.giveAnswers(
             self.tanteoOutput, self.tanteoIterationsOutput, roots, counters
         )
@@ -501,6 +516,50 @@ class App(ttk.Frame):
                 self.reglaFalsaIterationsOutput.insert(0, counter)
                 self.reglaFalsaIterationsOutput.configure(state="readonly")
                 return xMiddle
+
+    def steffensen(self):
+        counters = []
+        roots = []
+
+        eQ, degree = self.getEntry()
+        bigCount = 0
+
+        while len(roots) < degree:
+            bigCount += 1
+            count = 0
+            x0 = self.getUniformSeed(roots)
+
+            while True:
+                count += 1
+
+                eqX0 = eQ.replace("xI", str(x0))
+
+                if abs(eval(eqX0)) <= 0.00001:
+                    self.verifyRoots(roots, counters, x0, count)
+                    break
+                else:
+                    eqX0PlusEqX0 = eQ.replace("xI", str(x0 + eval(eqX0)))
+
+                    x1 = x0 - ((eval(eqX0) ** 2) / (eval(eqX0PlusEqX0) - eval(eqX0)))
+
+                    eqX1 = eQ.replace("xI", str(x1))
+
+                    if abs(eval(eqX1)) <= 0.00001:
+                        self.verifyRoots(roots, counters, x0, count)
+                        break
+                    else:
+                        x0 = x1
+
+                    if count > 1000:
+                        break
+            if bigCount > 100:
+                break
+
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.steffensenOutput, self.steffensenIterationsOutput, roots, counters
+        )
+        return roots
 
     # Function make the graphic based on the function
     def getGraphic(self, eqVar, zeros):
