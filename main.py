@@ -366,29 +366,34 @@ class App(ttk.Frame):
 
         return xLow, xHigh
 
+    # Function to get an integer seed
     def getIntSeed(self, roots):
         while True:
             x0 = rnd.randint(-10, 10)
             if x0 not in roots:
                 return x0
 
+    # Function to get a float seed
     def getUniformSeed(self, roots):
         while True:
             x0 = rnd.uniform(-10, 10)
             if x0 not in roots:
                 return x0
 
+    # Function to verify if the root is already in the array
     def verifyRoots(self, roots, counters, num, count):
         if round(num, 2) not in roots:
             roots.append(round(num, 2))
             counters.append(count)
 
+    # Function to clean the array from numbers that are to close
     def cleanArray(self, arr, margin):
         return sorted(
             [arr[0]]
             + [arr[i] for i in range(1, len(arr)) if abs(arr[i] - arr[i - 1]) > margin]
         )
 
+    # Function to print the answers in the UI
     def giveAnswers(self, methodOutput, methodIterationsOutput, roots, counters):
         averageCounter = sum(counters) / len(counters)
         methodOutput.insert(0, sorted(roots))
