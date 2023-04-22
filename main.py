@@ -394,16 +394,12 @@ class App(ttk.Frame):
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar, roots):
         xLow = rnd.randint(-100, 100)
-        equationLow = eqVar.replace("xI", str(xLow))
-        while eval(equationLow) > 0 and xLow not in roots:
+        while eval(eqVar, {"xI": xLow}) > 0 and xLow not in roots:
             xLow = rnd.randint(-100, 100)
-            equationLow = eqVar.replace("xI", str(xLow))
 
-        xHigh = rnd.randint(xLow, 100)
-        equationHigh = eqVar.replace("xI", str(xHigh))
-        while eval(equationHigh) < 0 and xHigh not in roots:
-            xHigh = rnd.randint(xLow, 100)
-            equationHigh = eqVar.replace("xI", str(xHigh))
+        xHigh = rnd.randint(-100, 100)
+        while eval(eqVar, {"xI": xHigh}) < 0 and xHigh not in roots:
+            xHigh = rnd.randint(-100, 100)
 
         return xLow, xHigh
 
@@ -529,14 +525,12 @@ class App(ttk.Frame):
                 counter += 1
                 xMiddle = (xHigh + xLow) / 2
 
-                eq = eqVar.replace("xI", str(xMiddle))
-
-                if eval(eq) > 0:
+                if eval(eqVar, {"xI": xMiddle}) > 0:
                     xHigh = xMiddle
                 else:
                     xLow = xMiddle
 
-                if abs(eval(eq)) <= 0.00001:
+                if abs(eval(eqVar, {"xI": xMiddle})) <= 0.0001:
                     self.verifyRoots(roots, counters, xMiddle, counter)
                     break
 
@@ -605,7 +599,7 @@ class App(ttk.Frame):
 
                 eqX0 = eQ.replace("xI", str(x0))
 
-                if abs(eval(eqX0)) <= 0.00001:
+                if abs(eval(eqX0)) <= 0.0001:
                     self.verifyRoots(roots, counters, x0, count)
                     break
                 else:
