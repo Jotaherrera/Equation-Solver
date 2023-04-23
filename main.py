@@ -8,6 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from math import *
 import random as rnd
+from sympy import *
 import re
 
 
@@ -364,7 +365,7 @@ class App(ttk.Frame):
         if self.reglaFalsaVar.get() == True:
             zeros = self.reglaFalsa()
         if self.nRVar.get() == True:
-            zeros = self.nR()
+            zeros = self.newtonRaphson()
         if self.secanteVar.get() == True:
             zeros = self.secante()
         if self.steffensenVar.get() == True:
@@ -390,6 +391,13 @@ class App(ttk.Frame):
             eqVar = re.sub(r"xI\*\*([02468])", r"abs(xI)**\1", eqVar)
 
         return eqVar, degree
+
+    def getEntryRaw(self):
+        rawEq = str(self.eqEntry.get())
+        # Change x for xI
+        eqVar = rawEq.replace("x", "xI").replace("X", "xI")
+
+        return eqVar
 
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar, roots):
@@ -599,7 +607,16 @@ class App(ttk.Frame):
         return roots
 
     def newtonRaphson(self):
-        pass
+        roots = [0]
+        self.derivativeEntry.configure(state="enable")
+        self.derivativeEntry.delete(0, "end")
+        eqVarRaw = self.getEntryRaw()
+        x = symbols("xI")
+        sympify(eqVarRaw)
+        derivative = diff(eqVarRaw, x)
+        derivativeString = str(derivative)
+        self.derivativeEntry.insert(0, derivativeString.replace("xI", "x"))
+        return roots
 
     def secante(self):
         roots = []
