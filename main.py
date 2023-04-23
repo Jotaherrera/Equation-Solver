@@ -632,11 +632,14 @@ class App(ttk.Frame):
 
             while True:
                 counter += 1
-                
+
                 if (eval(eqVar, {"xI": x0})) == 0:
+                    self.verifyRoots(roots, counters, x0, counter)
+                    break
+
+                if (eval(eqDerivative, {"xI": x0})) == 0:
                     self.verifyRoots(roots, counters, x1, counter)
                     break
-                
                 x1 = x0 - ((eval(eqVar, {"xI": x0})) / (eval(eqDerivative, {"xI": x0})))
 
                 if (eval(eqVar, {"xI": x0})) == 0:
