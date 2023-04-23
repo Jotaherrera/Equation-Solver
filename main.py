@@ -454,22 +454,17 @@ class App(ttk.Frame):
             x1 = 0
             xI = self.getIntSeed(roots)
 
-            # Initial replacing
-            eq = eqVar.replace("xI", str(xI))
             if xI >= 0:  # if xI is positive or zero
                 while True:
-                    if eval(eq) > 0:
+                    if eval(eqVar, {"xI": xI}) > 0:
                         counter += 1
                         x1 = xI - 0.001
                         xI = x1
-                        eq = eqVar.replace("xI", str(xI))
-                    elif eval(eq) < 0:
+                    elif eval(eqVar, {"xI": xI}) < 0:
                         counter += 1
                         x1 = xI + 0.001
-                        xI = x1
-                        eq = eqVar.replace("xI", str(xI))
 
-                    if abs(eval(eq)) <= 0.0001:
+                    if abs(eval(eqVar, {"xI": xI})) <= 0.0001:
                         self.verifyRoots(roots, counters, xI, counter)
                         break
 
@@ -478,18 +473,16 @@ class App(ttk.Frame):
 
             else:  # if xI is negative
                 while True:
-                    if eval(eq) > 0:
+                    if eval(eqVar, {"xI": xI}) > 0:
                         counter += 1
                         x1 = xI + 0.001
                         xI = x1
-                        eq = eqVar.replace("xI", str(xI))
-                    elif eval(eq) < 0:
+                    elif eval(eqVar, {"xI": xI}) < 0:
                         counter += 1
                         x1 = xI - 0.001
                         xI = x1
-                        eq = eqVar.replace("xI", str(xI))
 
-                    if abs(eval(eq)) <= 0.001:
+                    if abs(eval(eqVar, {"xI": xI})) <= 0.0001:
                         self.verifyRoots(roots, counters, xI, counter)
                         break
 
