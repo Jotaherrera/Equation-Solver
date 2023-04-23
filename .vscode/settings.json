@@ -1,5 +1,5 @@
 {
-  "python.formatting.provider": "black",
+  "python.formatting.provider": "none",
   "cSpell.words": [
     "accentbutton",
     "axhline",
@@ -18,5 +18,8 @@
     "xlim",
     "ylim",
     "zorder"
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
 }
