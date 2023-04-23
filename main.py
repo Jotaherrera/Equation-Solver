@@ -446,6 +446,19 @@ class App(ttk.Frame):
         methodIterationsOutput.insert(0, averageCounter)
         methodIterationsOutput.configure(state="readonly")
 
+    def getDerivative(self):
+        self.derivativeEntry.configure(state="enable")
+        self.derivativeEntry.delete(0, "end")
+        eqVarRaw = self.getEntryRaw()
+        x = symbols("xI")
+        sympify(eqVarRaw)
+        derivative = diff(eqVarRaw, x)
+        derivativeString = str(derivative)
+        self.derivativeEntry.insert(0, derivativeString.replace("xI", "x"))
+        self.derivativeEntry.configure(state="disable")
+
+        return derivativeString
+
     def tanteo(self):
         roots = []
         counters = []
@@ -607,16 +620,44 @@ class App(ttk.Frame):
         return roots
 
     def newtonRaphson(self):
-        roots = [0]
-        self.derivativeEntry.configure(state="enable")
-        self.derivativeEntry.delete(0, "end")
-        eqVarRaw = self.getEntryRaw()
-        x = symbols("xI")
-        sympify(eqVarRaw)
-        derivative = diff(eqVarRaw, x)
-        derivativeString = str(derivative)
-        self.derivativeEntry.insert(0, derivativeString.replace("xI", "x"))
-        self.derivativeEntry.configure(state="disable")
+        roots = []
+        counters = []
+        bigCount = 0
+        eqVar, degree = self.getEntry()
+        eqDerivative = self.getDerivative()
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
+            x0 = self.getIntSeed(roots)
+
+            while True:
+                counter += 1
+                
+                if (eval(eqVar, {"xI": x0})) == 0:
+                    self.verifyRoots(roots, counters, x1, counter)
+                    break
+                
+                x1 = x0 - ((eval(eqVar, {"xI": x0})) / (eval(eqDerivative, {"xI": x0})))
+
+                if (eval(eqVar, {"xI": x0})) == 0:
+                    self.verifyRoots(roots, counters, x1, counter)
+                    break
+                else:
+                    x0 = x1
+
+                if counter > 10000:
+                    if len(roots) == 0:
+                        messagebox.showinfo(
+                            title="Newton Raphson",
+                            message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
+                        )
+                        return roots
+                    break
+            if bigCount > 500:
+                break
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(self.nROutput, self.nRIterationsOutput, roots, counters)
+
         return roots
 
     def secante(self):
