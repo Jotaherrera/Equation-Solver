@@ -539,35 +539,45 @@ class App(ttk.Frame):
         return roots
 
     def reglaFalsa(self):
+        roots = []
+        counters = []
+        bigCount = 0
         eqVar, degree = self.getEntry()
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
+            xLow, xHigh = self.rndNumbers(eqVar, roots)
 
-        xLow, xHigh = self.rndNumbers(eqVar)
+            while True:
+                counter += 1
+                xMiddle = xLow - (eval(eqVar, {"xI": xLow})) * (xHigh - xLow) / (
+                    eval(eqVar, {"xI": xHigh}) - eval(eqVar, {"xI": xLow})
+                )
 
-        counter = 0
-        while True:
-            counter += 1
+                if eval(eqVar, {"xI": xMiddle}) > 0:
+                    xHigh = xMiddle
+                else:
+                    xLow = xMiddle
 
-            equationLow = eqVar.replace("xI", str(xLow))
-            equationHigh = eqVar.replace("xI", str(xHigh))
+                if abs(eval(eqVar, {"xI": xMiddle})) <= 0.0001:
+                    self.verifyRoots(roots, counters, xMiddle, counter)
+                    break
+                if counter > 1000:
+                    break
+            if bigCount > 200:
+                if len(roots) == 0:
+                    messagebox.showinfo(
+                        title="Info",
+                        message="Se supero el número de iteraciones por Secante, no se pudo resolver por este método.",
+                    )
+                    return roots
+                break
 
-            xMiddle = xLow - (
-                eval(equationLow)
-                * (xHigh - xLow)
-                / (eval(equationHigh) - eval(equationLow))
-            )
-            eqM = eqVar.replace("xI", str(xMiddle))
-
-            if eval(eqM) > 0:
-                xHigh = xMiddle
-            else:
-                xLow = xMiddle
-
-            if abs(eval(eqM)) <= 0.001:
-                self.reglaFalsaOutput.insert(0, round(xMiddle, 2))
-                self.reglaFalsaOutput.configure(state="readonly")
-                self.reglaFalsaIterationsOutput.insert(0, counter)
-                self.reglaFalsaIterationsOutput.configure(state="readonly")
-                return xMiddle
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.reglaFalsaOutput, self.reglaFalsaIterationsOutput, roots, counters
+        )
+        return roots
 
     def newtonRaphson(self):
         pass
