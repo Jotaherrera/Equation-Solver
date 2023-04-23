@@ -14,6 +14,8 @@
     "pyplot",
     "Raphson",
     "steffensen",
+    "sympify",
+    "sympy",
     "tkagg",
     "xlim",
     "ylim",
