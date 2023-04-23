@@ -393,13 +393,13 @@ class App(ttk.Frame):
 
     # Function to generate the random numbers for biseccion and regla falsa
     def rndNumbers(self, eqVar, roots):
-        xLow = rnd.randint(-100, 100)
+        xLow = rnd.randint(-10, 10)
         while eval(eqVar, {"xI": xLow}) > 0 and xLow not in roots:
-            xLow = rnd.randint(-100, 100)
+            xLow = rnd.randint(-10, 10)
 
-        xHigh = rnd.randint(-100, 100)
+        xHigh = rnd.randint(-10, 10)
         while eval(eqVar, {"xI": xHigh}) < 0 and xHigh not in roots:
-            xHigh = rnd.randint(-100, 100)
+            xHigh = rnd.randint(-10, 10)
 
         return xLow, xHigh
 
