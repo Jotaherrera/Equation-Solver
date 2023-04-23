@@ -501,7 +501,7 @@ class App(ttk.Frame):
                         title="Info",
                         message="Se supero el número de iteraciones por tanteo, no se pudo resolver por este método.",
                     )
-                    return
+                    return roots
                 break
 
         roots = self.cleanArray(roots, 0.1)
@@ -597,19 +597,18 @@ class App(ttk.Frame):
             while True:
                 count += 1
 
-                eqX0 = eQ.replace("xI", str(x0))
-
-                if abs(eval(eqX0)) <= 0.0001:
+                if abs(eval(eQ, {"xI": x0})) <= 0.0001:
                     self.verifyRoots(roots, counters, x0, count)
                     break
                 else:
-                    eqX0PlusEqX0 = eQ.replace("xI", str(x0 + eval(eqX0)))
+                    eqX0PlusEqX0 = eQ.replace("xI", str(x0 + eval(eQ, {"xI": x0})))
 
-                    x1 = x0 - ((eval(eqX0) ** 2) / (eval(eqX0PlusEqX0) - eval(eqX0)))
+                    x1 = x0 - (
+                        (eval(eQ, {"xI": x0}) ** 2)
+                        / (eval(eqX0PlusEqX0) - eval(eQ, {"xI": x0}))
+                    )
 
-                    eqX1 = eQ.replace("xI", str(x1))
-
-                    if abs(eval(eqX1)) <= 0.00001:
+                    if abs(eval(eQ, {"xI": x1})) <= 0.0001:
                         self.verifyRoots(roots, counters, x1, count)
                         break
                     else:
@@ -617,7 +616,13 @@ class App(ttk.Frame):
 
                     if count > 1000:
                         break
-            if bigCount > 100:
+            if bigCount > 200:
+                if len(roots) == 0:
+                    messagebox.showinfo(
+                        title="Info",
+                        message="Se supero el número de iteraciones por tanteo, no se pudo resolver por este método.",
+                    )
+                    return roots
                 break
 
         roots = self.cleanArray(roots, 0.1)
@@ -638,7 +643,7 @@ class App(ttk.Frame):
 
         # Graph function
         def f(x):
-            return eval(eqVar.replace("xI", str(x)))
+            return eval(eqVar, {"xI": x})
 
         # Restart the graph to its initial state
         restart()
@@ -650,8 +655,9 @@ class App(ttk.Frame):
         # Drawing the plot
         self.ax.plot(x, y)
         # Draw the red point
-        for zero in zeros:
-            self.ax.scatter(zero, 0, color="red", zorder=10)
+        if len(zeros) != 0:
+            for zero in zeros:
+                self.ax.scatter(zero, 0, color="red", zorder=10)
         # Showing plot and updating canvas
         plt.show()
         self.canvas.draw()
