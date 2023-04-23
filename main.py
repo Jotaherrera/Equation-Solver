@@ -284,8 +284,8 @@ class App(ttk.Frame):
 
         # Check if there is something on the entry
         if eqVar is not None and eqVar != "":
-            zeros = self.checked()
-            self.getGraphic(eqVar, zeros)
+            self.checked()
+            self.getGraphic(eqVar)
 
         self.popup.destroy()
         self.solveButton.config(state=tk.NORMAL)
@@ -359,19 +359,17 @@ class App(ttk.Frame):
         self.cleanEntries()
 
         if self.tanteoVar.get() == True:
-            zeros = self.tanteo()
+            self.tanteo()
         if self.biseccionVar.get() == True:
-            zeros = self.biseccion()
+            self.biseccion()
         if self.reglaFalsaVar.get() == True:
-            zeros = self.reglaFalsa()
+            self.reglaFalsa()
         if self.nRVar.get() == True:
-            zeros = self.newtonRaphson()
+            self.newtonRaphson()
         if self.secanteVar.get() == True:
-            zeros = self.secante()
+            self.secante()
         if self.steffensenVar.get() == True:
-            zeros = self.steffensen()
-
-        return zeros
+            self.steffensen()
 
     # Function to get the entry equation
     def getEntry(self):
@@ -548,6 +546,46 @@ class App(ttk.Frame):
                     self.verifyRoots(roots, counters, xMiddle, counter)
                     break
 
+                if counter > 1000:
+                    if len(roots) == 0:
+                        messagebox.showinfo(
+                            title="Bisección",
+                            message="Se supero el número de iteraciones por Bisección, no se pudo resolver por este método.",
+                        )
+                        return roots
+                    break
+            if bigCount > 200:
+                break
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.biseccionOutput, self.biseccionIterationsOutput, roots, counters
+        )
+
+        return roots
+
+    def biseccionGraph(self):
+        roots = []
+        counters = []
+        bigCount = 0
+        eqVar, degree = self.getEntry()
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
+            xLow, xHigh = self.rndNumbers(eqVar, roots)
+
+            while True:
+                counter += 1
+                xMiddle = (xHigh + xLow) / 2
+
+                if eval(eqVar, {"xI": xMiddle}) > 0:
+                    xHigh = xMiddle
+                else:
+                    xLow = xMiddle
+
+                if abs(eval(eqVar, {"xI": xMiddle})) <= 0.0001:
+                    self.verifyRoots(roots, counters, xMiddle, counter)
+                    break
+
                 if counter > 10000:
                     if len(roots) == 0:
                         messagebox.showinfo(
@@ -559,9 +597,6 @@ class App(ttk.Frame):
             if bigCount > 500:
                 break
         roots = self.cleanArray(roots, 0.1)
-        self.giveAnswers(
-            self.biseccionOutput, self.biseccionIterationsOutput, roots, counters
-        )
 
         return roots
 
@@ -648,7 +683,7 @@ class App(ttk.Frame):
                 else:
                     x0 = x1
 
-                if counter > 10000:
+                if counter > 1000:
                     if len(roots) == 0:
                         messagebox.showinfo(
                             title="Newton Raphson",
@@ -656,7 +691,7 @@ class App(ttk.Frame):
                         )
                         return roots
                     break
-            if bigCount > 500:
+            if bigCount > 200:
                 break
         roots = self.cleanArray(roots, 0.1)
         self.giveAnswers(self.nROutput, self.nRIterationsOutput, roots, counters)
@@ -766,7 +801,7 @@ class App(ttk.Frame):
         return roots
 
     # Function make the graphic based on the function
-    def getGraphic(self, eqVar, zeros):
+    def getGraphic(self, eqVar):
         def restart():
             self.ax.clear()
             self.ax.set_xlim(-50, 50)
@@ -774,6 +809,12 @@ class App(ttk.Frame):
             self.ax.axhline(0, color="black", linewidth="1.5")
             self.ax.axvline(0, color="black", linewidth="1.5")
             self.canvas.draw()
+
+        def getRedPoints():
+            points = self.biseccionGraph()
+            if len(points) != 0:
+                for point in points:
+                    self.ax.scatter(point, 0, color="red", zorder=10)
 
         # Graph function
         def f(x):
@@ -788,10 +829,9 @@ class App(ttk.Frame):
         y = [f(i) for i in x]
         # Drawing the plot
         self.ax.plot(x, y)
-        # Draw the red point
-        if len(zeros) != 0:
-            for zero in zeros:
-                self.ax.scatter(zero, 0, color="red", zorder=10)
+
+        # Draw red points
+        getRedPoints()
         # Showing plot and updating canvas
         plt.show()
         self.canvas.draw()
