@@ -573,7 +573,57 @@ class App(ttk.Frame):
         pass
 
     def secante(self):
-        pass
+        roots = []
+        counters = []
+        bigCount = 0
+        eqVar, degree = self.getEntry()
+        while len(roots) < degree:
+            bigCount += 1
+            counter = 0
+            xLow, xHigh = self.rndNumbers(eqVar, roots)
+
+            while True:
+                counter += 1
+
+                if (eval(eqVar, {"xI": xLow}) - eval(eqVar, {"xI": xHigh})) == 0:
+                    break
+
+                xC = xLow - (
+                    (eval(eqVar, {"xI": xLow}) * (xLow - xHigh))
+                    / (eval(eqVar, {"xI": xLow}) - eval(eqVar, {"xI": xHigh}))
+                )
+
+                if abs(eval(eqVar, {"xI": xC})) <= 0.0001:
+                    self.verifyRoots(roots, counters, xC, counter)
+                    break
+                elif eval(eqVar, {"xI": xLow}) * eval(eqVar, {"xI": xC}) < 0:
+                    xHigh = xC
+                    xC = xLow - (
+                        (eval(eqVar, {"xI": xLow}) * (xLow - xHigh))
+                        / (eval(eqVar, {"xI": xLow}) - eval(eqVar, {"xI": xHigh}))
+                    )
+                else:
+                    xLow = xC
+                    xC = xLow - (
+                        (eval(eqVar, {"xI": xLow}) * (xLow - xHigh))
+                        / (eval(eqVar, {"xI": xLow}) - eval(eqVar, {"xI": xHigh}))
+                    )
+
+                if counter > 1000:
+                    break
+            if bigCount > 200:
+                if len(roots) == 0:
+                    messagebox.showinfo(
+                        title="Info",
+                        message="Se supero el número de iteraciones por Secante, no se pudo resolver por este método.",
+                    )
+                    return roots
+                break
+        roots = self.cleanArray(roots, 0.1)
+        self.giveAnswers(
+            self.secanteOutput, self.secanteIterationsOutput, roots, counters
+        )
+        return roots
 
     def steffensen(self):
         counters = []
