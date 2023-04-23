@@ -491,8 +491,8 @@ class App(ttk.Frame):
             if bigCount > 200:
                 if len(roots) == 0:
                     messagebox.showinfo(
-                        title="Info",
-                        message="Se supero el número de iteraciones por tanteo, no se pudo resolver por este método.",
+                        title="Tanteo",
+                        message="Se supero el número de iteraciones por Tanteo, no se pudo resolver por este método.",
                     )
                     return roots
                 break
