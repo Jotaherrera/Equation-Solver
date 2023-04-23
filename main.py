@@ -616,6 +616,7 @@ class App(ttk.Frame):
         derivative = diff(eqVarRaw, x)
         derivativeString = str(derivative)
         self.derivativeEntry.insert(0, derivativeString.replace("xI", "x"))
+        self.derivativeEntry.configure(state="disable")
         return roots
 
     def secante(self):
