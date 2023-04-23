@@ -469,7 +469,7 @@ class App(ttk.Frame):
                         xI = x1
                         eq = eqVar.replace("xI", str(xI))
 
-                    if abs(eval(eq)) <= 0.001:
+                    if abs(eval(eq)) <= 0.0001:
                         self.verifyRoots(roots, counters, xI, counter)
                         break
 
