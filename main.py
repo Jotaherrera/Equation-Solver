@@ -556,6 +556,19 @@ class App(ttk.Frame):
 
             while True:
                 counter += 1
+
+                if eval(eqVar, {"xI": xLow}) == 0:
+                    self.verifyRoots(roots, counters, xLow, counter)
+                    break
+
+                if eval(eqVar, {"xI": xHigh}) == 0:
+                    self.verifyRoots(roots, counters, xHigh, counter)
+                    break
+
+                if xHigh - xLow == 0:
+                    self.verifyRoots(roots, counters, xHigh, counter)
+                    break
+
                 xMiddle = xLow - (eval(eqVar, {"xI": xLow})) * (xHigh - xLow) / (
                     eval(eqVar, {"xI": xHigh}) - eval(eqVar, {"xI": xLow})
                 )
