@@ -223,8 +223,8 @@ class App(ttk.Frame):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.graphFrame)
 
         # Setting the predefined zoom
-        self.ax.set_xlim(-50, 50)
-        self.ax.set_ylim(-50, 50)
+        self.ax.set_xlim(-20, 20)
+        self.ax.set_ylim(-20, 20)
 
         # Drawing the canvas
         self.canvas.draw()
@@ -822,8 +822,8 @@ class App(ttk.Frame):
     def getGraphic(self, eqVar):
         def restart():
             self.ax.clear()
-            self.ax.set_xlim(-50, 50)
-            self.ax.set_ylim(-50, 50)
+            self.ax.set_xlim(-20, 20)
+            self.ax.set_ylim(-20, 20)
             self.ax.axhline(0, color="black", linewidth="1.5")
             self.ax.axvline(0, color="black", linewidth="1.5")
             self.canvas.draw()
