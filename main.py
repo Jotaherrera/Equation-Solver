@@ -919,11 +919,11 @@ class App(ttk.Frame):
                 270,
             )
 
-            filename = "temp_graph.png"
-            filepath = os.path.join(os.getcwd(), filename)
+            imageName = "temp_graph.png"
+            filepathImg = os.path.join(os.getcwd(), imageName)
 
             # Save figure
-            self.canvas.print_figure(filepath, bbox_inches="tight")
+            self.canvas.print_figure(filepathImg, bbox_inches="tight")
             with open("temp_graph.png", "rb") as f:
                 img = ImageReader(f)
             doc.drawImage(img, 180, 70, width=242, height=310)
