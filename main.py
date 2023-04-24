@@ -9,6 +9,13 @@ from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from math import *
 import random as rnd
 from sympy import *
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import mm
+from reportlab.lib.utils import ImageReader
+import datetime
+import os
+import io
 import re
 
 
@@ -201,7 +208,7 @@ class App(ttk.Frame):
             self.buttonFrame,
             text="Reporte",
             style="Accent.TButton",
-            command=self.solve,
+            command=self.getReport,
         )
         self.reportButton.grid(row=0, column=1, padx=(5, 0), pady=0, sticky="nsew")
 
@@ -655,48 +662,57 @@ class App(ttk.Frame):
         return roots
 
     def newtonRaphson(self):
-        roots = []
-        counters = []
-        bigCount = 0
-        eqVar, degree = self.getEntry()
-        eqDerivative = self.getDerivative()
-        while len(roots) < degree:
-            bigCount += 1
-            counter = 0
-            x0 = self.getIntSeed(roots)
+        try:
+            roots = []
+            counters = []
+            bigCount = 0
+            eqVar, degree = self.getEntry()
+            eqDerivative = self.getDerivative()
+            while len(roots) < degree:
+                bigCount += 1
+                counter = 0
+                x0 = self.getIntSeed(roots)
 
-            while True:
-                counter += 1
+                while True:
+                    counter += 1
 
-                if (eval(eqVar, {"xI": x0})) == 0:
-                    self.verifyRoots(roots, counters, x0, counter)
+                    if (eval(eqVar, {"xI": x0})) == 0:
+                        self.verifyRoots(roots, counters, x0, counter)
+                        break
+
+                    if (eval(eqDerivative, {"xI": x0})) == 0:
+                        self.verifyRoots(roots, counters, x1, counter)
+                        break
+                    x1 = x0 - (
+                        (eval(eqVar, {"xI": x0})) / (eval(eqDerivative, {"xI": x0}))
+                    )
+
+                    if (eval(eqVar, {"xI": x0})) == 0:
+                        self.verifyRoots(roots, counters, x1, counter)
+                        break
+                    else:
+                        x0 = x1
+
+                    if counter > 1000:
+                        if len(roots) == 0:
+                            messagebox.showinfo(
+                                title="Newton Raphson",
+                                message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
+                            )
+                            return roots
+                        break
+                if bigCount > 200:
                     break
+            roots = self.cleanArray(roots, 0.1)
+            self.giveAnswers(self.nROutput, self.nRIterationsOutput, roots, counters)
 
-                if (eval(eqDerivative, {"xI": x0})) == 0:
-                    self.verifyRoots(roots, counters, x1, counter)
-                    break
-                x1 = x0 - ((eval(eqVar, {"xI": x0})) / (eval(eqDerivative, {"xI": x0})))
-
-                if (eval(eqVar, {"xI": x0})) == 0:
-                    self.verifyRoots(roots, counters, x1, counter)
-                    break
-                else:
-                    x0 = x1
-
-                if counter > 1000:
-                    if len(roots) == 0:
-                        messagebox.showinfo(
-                            title="Newton Raphson",
-                            message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
-                        )
-                        return roots
-                    break
-            if bigCount > 200:
-                break
-        roots = self.cleanArray(roots, 0.1)
-        self.giveAnswers(self.nROutput, self.nRIterationsOutput, roots, counters)
-
-        return roots
+            return roots
+        except:
+            messagebox.showinfo(
+                title="Newton Raphson",
+                message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
+            )
+            return roots
 
     def secante(self):
         roots = []
@@ -835,6 +851,88 @@ class App(ttk.Frame):
         # Showing plot and updating canvas
         plt.show()
         self.canvas.draw()
+
+    def getReport(self):
+        def writePDF(methodOutput, iteracionesOutput, methodTitle, adjust):
+            x = 72
+            y = 710
+
+            doc.setFont("Courier", 12)
+
+            if methodOutput.get() != "":
+                doc.drawString(x, y - adjust, f"{methodTitle}: " + methodOutput.get())
+                doc.drawString(
+                    x,
+                    y - (adjust + 20),
+                    f"Iteraciones {methodTitle}: " + iteracionesOutput.get(),
+                )
+            else:
+                doc.drawString(x, y - adjust, f"{methodTitle}: ")
+                doc.drawString(x, y - (adjust + 20), f"Iteraciones {methodTitle}: ")
+
+        try:
+            if not os.path.exists("Reports"):
+                os.makedirs("Reports")
+
+            # verifica si el archivo "EquationSolverReport.pdf" ya existe
+            filepath = os.path.join("Reports", "EquationSolverReport.pdf")
+            i = 1
+            while os.path.exists(filepath):
+                filename = f"EquationSolverReport_{i}.pdf"
+                filepath = os.path.join("Reports", filename)
+                i += 1
+
+            # crea el documento pdf
+            doc = canvas.Canvas(filepath, pagesize=A4)
+            now = datetime.datetime.now()
+            date_string = now.strftime("%d/%m/%Y %H:%M:%S")
+            doc.setFont("Courier", 12)
+            doc.drawString(14 * mm, 280 * mm, date_string)
+
+            # escribe el título del reporte
+            doc.setFont("Courier-Bold", 18)
+            doc.drawString(20 * mm, 260 * mm, "Reporte: Solución de Ecuaciones")
+
+            # agrega el contenido al documento
+            doc.setFont("Courier", 12)
+
+            writePDF(self.tanteoOutput, self.tanteoIterationsOutput, "Tanteo", 20)
+            writePDF(
+                self.biseccionOutput, self.biseccionIterationsOutput, "Bisección", 70
+            )
+            writePDF(
+                self.reglaFalsaOutput,
+                self.reglaFalsaIterationsOutput,
+                "Regla Falsa",
+                120,
+            )
+            writePDF(self.nROutput, self.nRIterationsOutput, "Newton Raphson", 170)
+            writePDF(self.secanteOutput, self.secanteIterationsOutput, "Secante", 220)
+            writePDF(
+                self.steffensenOutput,
+                self.steffensenIterationsOutput,
+                "Steffensen",
+                270,
+            )
+
+            filename = "temp_graph.png"
+            filepath = os.path.join(os.getcwd(), filename)
+
+            # Guardar la figura
+            # self.tlb.save_figure(filepath, bbox_inches="tight")
+            self.canvas.print_figure(filepath, bbox_inches="tight")
+            with open("temp_graph.png", "rb") as f:
+                img = ImageReader(f)
+            doc.drawImage(img, 180, 70, width=242, height=310)
+            os.remove("temp_graph.png")
+            # guarda y cierra el documento
+            doc.save()
+
+            messagebox.showinfo("Reporte Generado", f"Se generó el reporte: {filepath}")
+        except:
+            messagebox.showerror(
+                "Error PDF", "Ocurrió un error al intentar guardar el archivo."
+            )
 
 
 # Python entry Point
