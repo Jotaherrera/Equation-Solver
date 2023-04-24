@@ -877,7 +877,7 @@ class App(ttk.Frame):
             if not os.path.exists("Reports"):
                 os.makedirs("Reports")
 
-            # verifica si el archivo "EquationSolverReport.pdf" ya existe
+            # Verify if file exits
             filepath = os.path.join("Reports", "EquationSolverReport.pdf")
             i = 1
             while os.path.exists(filepath):
@@ -885,23 +885,21 @@ class App(ttk.Frame):
                 filepath = os.path.join("Reports", filename)
                 i += 1
 
-            # crea el documento pdf
+            # Create PDF doc
             doc = canvas.Canvas(filepath, pagesize=A4)
             now = datetime.datetime.now()
             date_string = now.strftime("%d/%m/%Y %H:%M:%S")
             doc.setFont("Courier", 12)
             doc.drawString(14 * mm, 280 * mm, date_string)
 
-            # escribe el título del reporte
+            # Write title
             doc.setFont("Courier-Bold", 18)
             doc.drawString(20 * mm, 265 * mm, "Reporte: Solución de Ecuaciones")
 
             doc.setFont("Courier-Bold", 12)
             doc.drawString(72, 715, self.eqEntry.get())
 
-            # agrega el contenido al documento
             doc.setFont("Courier", 12)
-
             writePDF(self.tanteoOutput, self.tanteoIterationsOutput, "Tanteo", 20)
             writePDF(
                 self.biseccionOutput, self.biseccionIterationsOutput, "Bisección", 70
@@ -924,14 +922,14 @@ class App(ttk.Frame):
             filename = "temp_graph.png"
             filepath = os.path.join(os.getcwd(), filename)
 
-            # Guardar la figura
-            # self.tlb.save_figure(filepath, bbox_inches="tight")
+            # Save figure
             self.canvas.print_figure(filepath, bbox_inches="tight")
             with open("temp_graph.png", "rb") as f:
                 img = ImageReader(f)
             doc.drawImage(img, 180, 70, width=242, height=310)
             os.remove("temp_graph.png")
-            # guarda y cierra el documento
+
+            # Save and close PDF
             doc.save()
 
             messagebox.showinfo("Reporte Generado", f"Se generó el reporte: {filepath}")
