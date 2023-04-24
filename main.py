@@ -894,7 +894,10 @@ class App(ttk.Frame):
 
             # escribe el título del reporte
             doc.setFont("Courier-Bold", 18)
-            doc.drawString(20 * mm, 260 * mm, "Reporte: Solución de Ecuaciones")
+            doc.drawString(20 * mm, 265 * mm, "Reporte: Solución de Ecuaciones")
+
+            doc.setFont("Courier-Bold", 12)
+            doc.drawString(72, 715, self.eqEntry.get())
 
             # agrega el contenido al documento
             doc.setFont("Courier", 12)
