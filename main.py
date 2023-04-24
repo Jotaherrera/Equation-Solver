@@ -397,6 +397,7 @@ class App(ttk.Frame):
 
         return eqVar, degree
 
+    # Function to get the equation without wrapped it in absolute value
     def getEntryRaw(self):
         rawEq = str(self.eqEntry.get())
         # Change x for xI
@@ -451,6 +452,7 @@ class App(ttk.Frame):
         methodIterationsOutput.insert(0, averageCounter)
         methodIterationsOutput.configure(state="readonly")
 
+    # Function to get the derivative automatically
     def getDerivative(self):
         self.derivativeEntry.configure(state="enable")
         self.derivativeEntry.delete(0, "end")
@@ -852,6 +854,7 @@ class App(ttk.Frame):
         plt.show()
         self.canvas.draw()
 
+    # Function to make a report of everything displayed on the screen
     def getReport(self):
         def writePDF(methodOutput, iteracionesOutput, methodTitle, adjust):
             x = 72
