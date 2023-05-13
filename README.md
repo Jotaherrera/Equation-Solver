@@ -6,7 +6,7 @@ Equation Solver is a tool built using Python and Tkinter that allows users to so
 
 - **Trial and Error:** this method adds or subtracts until it reaches the solution(s).
 - **Bisection**: this method involves repeatedly bisecting the interval in which the solution resides.
-- **Regula Falsi:** this method approximates the solution(s) by linear interpolation between the values of the function at the endpoints of an interval.
+- **Iterations:** this method approximates the solution(s) by linear interpolation between the values of the function at the endpoints of an interval.
 - **Newton-Raphson:** This method approximates the solution(s) by using the function and its derivative to iteratively improve an initial guess.
 - **Secant:** this method approximates the solution(s) by using a line that passes through two points on the graph of the function.
 - **Steffensen:** this method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's second derivative.
@@ -19,9 +19,9 @@ All methods use a random generation function to get the initial numbers of the c
 
 Equation Solver was built using the following technologies:
 
-- Tkinter
-- Python
-- Tcl
+- [Tkinter](https://docs.python.org/3/library/tkinter.html)
+- [Python](https://www.python.org/)
+- [Tcl](https://www.tcl.tk/)
 
 ## Libraries
 
@@ -108,3 +108,17 @@ python main.py
 ```
 
 This will start the program and open the GUI window. From there, you can use the various options and features of the program.
+
+## Screenshots
+
+Here are some screenshots of the Equation Solver in action:
+
+![Screenshot 1](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/Screenshot1.png)
+
+![Screenshot 2](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/Screenshot2.png)
+
+![Screenshot 3](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/Screenshot3.png)
+
+![Screenshot 4](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/Screenshot4.png)
+
+![Screenshot 5](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/Screenshot5.png)
