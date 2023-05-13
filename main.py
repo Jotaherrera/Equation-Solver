@@ -519,8 +519,8 @@ class App(ttk.Frame):
             if bigCount > 200:
                 if len(roots) == 0:
                     messagebox.showinfo(
-                        title="Tanteo",
-                        message="Se supero el número de iteraciones por Tanteo, no se pudo resolver por este método.",
+                        title="T&E",
+                        message="The number of iterations exceeded the number of iterations by T&E, could not be solved by this method.",
                     )
                     return roots
                 break
@@ -558,8 +558,8 @@ class App(ttk.Frame):
                 if counter > 1000:
                     if len(roots) == 0:
                         messagebox.showinfo(
-                            title="Bisección",
-                            message="Se supero el número de iteraciones por Bisección, no se pudo resolver por este método.",
+                            title="Bisection",
+                            message="The number of iterations exceeded the number of iterations by Bisection, could not be solved by this method.",
                         )
                         return roots
                     break
@@ -598,8 +598,8 @@ class App(ttk.Frame):
                 if counter > 10000:
                     if len(roots) == 0:
                         messagebox.showinfo(
-                            title="Bisección",
-                            message="Se supero el número de iteraciones por Bisección, no se pudo resolver por este método.",
+                            title="Bisection",
+                            message="The number of iterations exceeded the number of iterations by Bisection, could not be solved by this method.",
                         )
                         return roots
                     break
@@ -651,8 +651,8 @@ class App(ttk.Frame):
             if bigCount > 200:
                 if len(roots) == 0:
                     messagebox.showinfo(
-                        title="Regla Falsa",
-                        message="Se supero el número de iteraciones por Regla Falsa, no se pudo resolver por este método.",
+                        title="Regula Falsi",
+                        message="The number of iterations exceeded the number of iterations by Regula Falsi, could not be solved by this method.",
                     )
                     return roots
                 break
@@ -699,7 +699,7 @@ class App(ttk.Frame):
                         if len(roots) == 0:
                             messagebox.showinfo(
                                 title="Newton Raphson",
-                                message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
+                                message="The number of iterations exceeded the number of iterations by Newton Raphson, could not be solved by this method.",
                             )
                             return roots
                         break
@@ -712,7 +712,7 @@ class App(ttk.Frame):
         except:
             messagebox.showinfo(
                 title="Newton Raphson",
-                message="Se supero el número de iteraciones por Newton Raphson, no se pudo resolver por este método.",
+                message="The number of iterations exceeded the number of iterations by Newton Raphson, could not be solved by this method.",
             )
             return roots
 
@@ -758,8 +758,8 @@ class App(ttk.Frame):
             if bigCount > 200:
                 if len(roots) == 0:
                     messagebox.showinfo(
-                        title="Secante",
-                        message="Se supero el número de iteraciones por Secante, no se pudo resolver por este método.",
+                        title="Secant",
+                        message="The number of iterations exceeded the number of iterations by Secant, could not be solved by this method.",
                     )
                     return roots
                 break
@@ -807,7 +807,7 @@ class App(ttk.Frame):
                 if len(roots) == 0:
                     messagebox.showinfo(
                         title="Steffensen",
-                        message="Se supero el número de iteraciones por Steffensen, no se pudo resolver por este método.",
+                        message="The number of iterations exceeded the number of iterations by Steffensen, could not be solved by this method.",
                     )
                     return roots
                 break
@@ -867,11 +867,11 @@ class App(ttk.Frame):
                 doc.drawString(
                     x,
                     y - (adjust + 20),
-                    f"Iteraciones {methodTitle}: " + iteracionesOutput.get(),
+                    f"{methodTitle} Iterations: " + iteracionesOutput.get(),
                 )
             else:
                 doc.drawString(x, y - adjust, f"{methodTitle}: ")
-                doc.drawString(x, y - (adjust + 20), f"Iteraciones {methodTitle}: ")
+                doc.drawString(x, y - (adjust + 20), f"{methodTitle} Iterations: ")
 
         try:
             if not os.path.exists("Reports"):
@@ -894,24 +894,24 @@ class App(ttk.Frame):
 
             # Write title
             doc.setFont("Courier-Bold", 18)
-            doc.drawString(20 * mm, 265 * mm, "Reporte: Solución de Ecuaciones")
+            doc.drawString(20 * mm, 265 * mm, "Report: Equation Solver")
 
             doc.setFont("Courier-Bold", 12)
             doc.drawString(72, 715, self.eqEntry.get())
 
             doc.setFont("Courier", 12)
-            writePDF(self.tanteoOutput, self.tanteoIterationsOutput, "Tanteo", 20)
+            writePDF(self.tanteoOutput, self.tanteoIterationsOutput, "T&E", 20)
             writePDF(
-                self.biseccionOutput, self.biseccionIterationsOutput, "Bisección", 70
+                self.biseccionOutput, self.biseccionIterationsOutput, "Bisection", 70
             )
             writePDF(
                 self.reglaFalsaOutput,
                 self.reglaFalsaIterationsOutput,
-                "Regla Falsa",
+                "Regula Falsi",
                 120,
             )
             writePDF(self.nROutput, self.nRIterationsOutput, "Newton Raphson", 170)
-            writePDF(self.secanteOutput, self.secanteIterationsOutput, "Secante", 220)
+            writePDF(self.secanteOutput, self.secanteIterationsOutput, "Secant", 220)
             writePDF(
                 self.steffensenOutput,
                 self.steffensenIterationsOutput,
@@ -932,10 +932,12 @@ class App(ttk.Frame):
             # Save and close PDF
             doc.save()
 
-            messagebox.showinfo("Reporte Generado", f"Se generó el reporte: {filepath}")
+            messagebox.showinfo(
+                "Generated report", f"The report is generated in: {filepath}"
+            )
         except:
             messagebox.showerror(
-                "Error PDF", "Ocurrió un error al intentar guardar el archivo."
+                "Error PDF", "An error occurred while trying to save the file."
             )
 
 
