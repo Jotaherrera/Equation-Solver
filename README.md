@@ -1,21 +1,110 @@
-# Solucionador De Ecuaciones
+# Equation Solver
 
-Este programa tiene como objetivo principal el ser capaz de solucionar y graficar diferentes ecuaciones, llegando a las diferentes soluciones de la misma (si es que tiene más de una) mediante el uso de seis métodos: Tanteo, Bisección, Regla Falsa, Newton Raphson, Secante y Steffensen.
+![Principal Screen Picture](https://github.com/Jotaherrera/EquationSolver/blob/main/public/github/ppScreen.png)
 
-La finalidad de usar diferentes métodos es poder concluir cuál se adapta mejor a las diferentes situaciones y casos específicos que se pueden presentar a la hora de desarrollar las ecuaciones. El apartado de iteraciones muestra cuánta veces en promedio el programa tuvo que recorrer el método para llegar a cada solución, por lo tanto, el método que requiera menos iteraciones, y tenga más precisión en su respuesta, será el más óptimo para esa ecuación.
+Equation Solver is a tool built using Python and Tkinter that allows users to solve algebraic equations. It serves as a graphic calculator for any function from grade one to eight, and this limit is easily modifiable. The tool uses different methods to solve equations:
 
-En la sección donde se sitúa la gráfica se puede observar el trazo de la línea correspondiente a esa función y en qué punto o puntos logra tocar el eje x (Marcado con un punto rojo en cada lugar donde la función toque el eje). En la gráfica se tiene la posibilidad de moverse dentro de cualquier punto de la grilla y acercarse para ver con exactitud los puntos de corte.
+- **Trial and Error:** this method adds or subtracts until it reaches the solution(s).
+- **Bisection**: this method involves repeatedly bisecting the interval in which the solution resides.
+- **Regula Falsi:** this method approximates the solution(s) by linear interpolation between the values of the function at the endpoints of an interval.
+- **Newton-Raphson:** This method approximates the solution(s) by using the function and its derivative to iteratively improve an initial guess.
+- **Secant:** this method approximates the solution(s) by using a line that passes through two points on the graph of the function.
+- **Steffensen:** this method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's second derivative.
+- **Steffensen:** this method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's third derivative.
+  All methods use a random generation function to get the initial numbers of the calculation, like a starting point.
 
-Es importante que antes de iniciar el programa se descarguen las librerías necesarias para su correcto funcionamiento. Esto se puede hacer fácilmente con el comando **pip install -r "requirements.txt"**. Dentro del archivo requirements.txt están las librerías necesarias, con la versión específica, que necesita el proyecto para funcionar.
+All methods use a random generation function to get the initial numbers of the calculation, like a starting point.
 
-Al programa se le añadió una pequeña pantalla de carga al presionar el botón resolver. Esta permanece presente mientras que el programa termina de hacer los diferentes cálculos. A su vez, mientras esta pantalla esté presente, se inhabilita cualquier acción dentro del programa para evitar sobrecargarlo de peticiones y que el código se rompa. Es preciso mencionar que a veces los tiempos de carga son largos, debido a que se tuvo que encontrar el equilibrio entre precisión y tiempo de carga. Estos son directamente proporcionales.
+## Technologies
 
-Si ha pasado un buen tiempo y no ha desaparecido la pantalla, es porque la ecuación es muy compleja para alguno de los métodos (o todos) y debe de hacer todas las iteraciones posibles para resolverlo. Deje que el programa termine de resolver y que la pantalla de carga desaparezca. No presione la pantalla desesperadamente ni esfuerce mucho el equipo con otras aplicaciones. Los únicos dos indicativo de que el programa se rompió y debe volver a ejecutarlo es que windows le reporte que el programa dejó de responder, o que le salga algún mensaje en consola informando de un error. Si ese es el caso, por favor reportelo detalladamente para poder mejorar el software.
+Equation Solver was built using the following technologies:
 
-Entre menos métodos de solución seleccione al mismo tiempo, más ágil será la respuesta del programa ante su petición.
+- Tkinter
+- Python
+- Tcl
 
-Cabe resaltar que cada uno de los métodos tiene un límite de iteraciones, con el objetivo de no obstaculizar la ejecución de los métodos que están después. Si este límite de iteraciones se cumple, le saltará una pantalla informándole, con el nombre del método y su razón. Al presionar “OK” le dará vía al programa para que pueda continuar la ejecución de la ecuación por los otros métodos de manera normal.
+## Libraries
 
-Al lado del botón “Resolver” encontrará el botón “Reporte”, este le generará un reporte en formato PDF de la información exacta que tiene en pantalla al momento de presionar el botón, tanto de los resultados como de la gráfica. Este archivo se guardará en la carpeta “Reports” que encontrará situada en la misma carpeta desde donde ejecutó el archivo **main.py**.
+The following libraries were used in the development of Equation Solver:
 
-Por último, debajo del apartado donde el usuario coloca la ecuación a resolver, se encuentra un caja de texto donde aparece la derivada de la ecuación introducida. Esta solo aparece después de presionar el botón de resolver, no sin antes haber seleccionado el método que lo requiera (Newton Raphson).
+- `tkinter`: A standard GUI library for Python.
+- `ttk`: An extension of the `tkinter` module, providing themed widgets.
+- `messagebox`: A module from `tkinter` that provides message boxes for displaying information or getting user input.
+- `matplotlib`: A plotting library for Python.
+- `matplotlib.figure`: A module for creating `Figure` instances.
+- `matplotlib.style`: A module that provides styles for `matplotlib` plots.
+- `matplotlib.backends.backend_tkagg`: A module that provides the `FigureCanvasTkAgg` class, which is used for embedding `matplotlib` plots into `tkinter` GUIs.
+- `matplotlib.backends._backend_tk`: A module that provides the `NavigationToolbar2Tk` class, which is used for adding a toolbar to `matplotlib` plots in `tkinter` GUIs.
+- `math`: A module that provides mathematical functions.
+- `random`: A module that provides functions for generating random numbers.
+- `sympy`: A Python library for symbolic mathematics.
+- `reportlab.pdfgen`: A module for generating PDF documents.
+- `reportlab.lib.pagesizes`: A module that provides standard page sizes for PDF documents.
+- `reportlab.lib.units`: A module that provides a unit conversion function for `reportlab`.
+- `reportlab.lib.utils`: A module that provides utility functions for `reportlab`.
+- `datetime`: A module that provides classes for working with dates and times.
+- `os`: A module that provides a way of using operating system dependent functionality.
+- `io`: A module that provides tools for working with I/O streams.
+- `re`: A module that provides support for regular expressions.
+
+## Theme
+
+The GUI of Equation Solver uses a custom theme inspired by the Azure TTK Theme, created by [rdbende](https://github.com/rdbende). The theme provides a modern and clean look to the application and improves the user experience.
+
+You can check out the Azure TTK Theme on [Azure theme for ttk](https://github.com/rdbende/Azure-ttk-theme).
+
+## Prerequisites
+
+Before running the application, please make sure that you have Python 3 installed on your computer. You can download Python from the official website [here](https://www.python.org/downloads/).
+
+Additionally, you need to clone or download this repository to your local machine. You can do this by clicking on the "Code" button on the GitHub repository page and selecting your preferred method of download.
+
+## Installation
+
+It is recommended to use a virtual environment to install the required libraries and run the program. This keeps the dependencies of this project separate from other projects you may have on your system.
+
+To create a virtual environment, follow these steps:
+
+1. Open a terminal and navigate to the directory where you want to create the virtual environment.
+
+2. Enter the following command:
+
+   ```bash
+   python -m venv env
+   ```
+
+   This will create a new directory called `env` in the current directory.
+
+3. Activate the virtual environment by running the following command:
+
+   - For Windows:
+
+   ```bash
+   env\Scripts\activate.bat
+   ```
+
+   - For Linux/Mac:
+
+   ```bash
+   source env/bin/activate
+   ```
+
+4. Install the required libraries by running the following command:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+This will install all the required libraries listed in the `requirements.txt` file.
+
+## Running the Program
+
+To run the program, make sure you have activated the virtual environment and navigate to the directory where the main.py file is located.
+
+Then, simply run the following command in the terminal:
+
+```bash
+python main.py
+```
+
+This will start the program and open the GUI window. From there, you can use the various options and features of the program.
