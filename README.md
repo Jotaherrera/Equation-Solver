@@ -1,6 +1,6 @@
 # Equation Solver
 
-![Principal Screen Picture](https://github.com/Jotaherrera/EquationSolver/blob/main/public/github/ppScreen.png)
+![Principal Screen Picture](https://github.com/Jotaherrera/Equation-Solver/blob/main/public/github/ppScreen.png)
 
 Equation Solver is a tool built using Python and Tkinter that allows users to solve algebraic equations. It serves as a graphic calculator for any function from grade one to eight, and this limit is easily modifiable. The tool uses different methods to solve equations:
 
