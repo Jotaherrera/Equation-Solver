@@ -4,14 +4,12 @@
 
 Equation Solver is a tool built using Python and Tkinter that allows users to solve algebraic equations. It serves as a graphic calculator for any function from grade one to eight, and this limit is easily modifiable. The tool uses different methods to solve equations:
 
-- **Trial and Error:** this method adds or subtracts until it reaches the solution(s).
-- **Bisection**: this method involves repeatedly bisecting the interval in which the solution resides.
-- **Iterations:** this method approximates the solution(s) by linear interpolation between the values of the function at the endpoints of an interval.
+- **Trial and Error:** This method adds or subtracts until it reaches the solution(s).
+- **Bisection:** This method involves repeatedly bisecting the interval in which the solution resides.
+- **Regula Falsi:** This method approximates the solution(s) by linear interpolation between the values of the function at the endpoints of an interval.
+- **Secant:** This method approximates the solution(s) by using a line that passes through two points on the graph of the function.
 - **Newton-Raphson:** This method approximates the solution(s) by using the function and its derivative to iteratively improve an initial guess.
-- **Secant:** this method approximates the solution(s) by using a line that passes through two points on the graph of the function.
-- **Steffensen:** this method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's second derivative.
-- **Steffensen:** this method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's third derivative.
-  All methods use a random generation function to get the initial numbers of the calculation, like a starting point.
+- **Steffensen:** This method approximates the solution(s) by using a fixed point iteration method with an additional acceleration step using the function's second derivative.
 
 All methods use a random generation function to get the initial numbers of the calculation, like a starting point.
 
