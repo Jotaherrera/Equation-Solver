@@ -44,7 +44,7 @@ class App(ttk.Frame):
     def setup_widgets(self):
         # Equation Entry Frame
         self.entryFrame = ttk.LabelFrame(
-            self, text="Ingrese el Polinomio", padding=(20, 10)
+            self, text="Enter the equation", padding=(20, 10)
         )
         self.entryFrame.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
         self.entryFrame.columnconfigure(index=0, weight=1)
@@ -67,23 +67,23 @@ class App(ttk.Frame):
 
         # Create a Frame for the Checkbuttons
         self.check_frame = ttk.LabelFrame(
-            self, text="Elige el método", padding=(20, 10)
+            self, text="Chose the method", padding=(20, 10)
         )
         self.check_frame.grid(row=1, column=0, padx=20, pady=10, sticky="nsew")
 
         # Checkbuttons
         self.tanteoCheck = ttk.Checkbutton(
-            self.check_frame, text="Tanteo", variable=self.tanteoVar
+            self.check_frame, text="T&E", variable=self.tanteoVar
         )
         self.tanteoCheck.grid(row=0, column=0, padx=5, pady=10, sticky="nsew")
 
         self.biseccionCheck = ttk.Checkbutton(
-            self.check_frame, text="Bisección", variable=self.biseccionVar
+            self.check_frame, text="Bisection", variable=self.biseccionVar
         )
         self.biseccionCheck.grid(row=0, column=1, padx=5, pady=10, sticky="nsew")
 
         self.reglaFalsaCheck = ttk.Checkbutton(
-            self.check_frame, text="Regla Falsa", variable=self.reglaFalsaVar
+            self.check_frame, text="Regula Falsi", variable=self.reglaFalsaVar
         )
         self.reglaFalsaCheck.grid(row=0, column=2, padx=5, pady=10, sticky="nsew")
 
@@ -93,7 +93,7 @@ class App(ttk.Frame):
         self.nRCheck.grid(row=1, column=0, padx=5, pady=10, sticky="nsew")
 
         self.secanteCheck = ttk.Checkbutton(
-            self.check_frame, text="Secante", variable=self.secanteVar
+            self.check_frame, text="Secant", variable=self.secanteVar
         )
         self.secanteCheck.grid(row=1, column=1, padx=5, pady=10, sticky="nsew")
 
@@ -105,25 +105,25 @@ class App(ttk.Frame):
         # Method, Answers and Iteration Frame
         self.answersFrame = ttk.LabelFrame(
             self,
-            text="    Método                    Respuestas              Prom. Iteraciones  ",
+            text="    Method                     Answers                    Avg. Iterations  ",
             padding=(20, 10),
         )
         self.answersFrame.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
 
         # Method Label
-        self.tanteoLabel = ttk.Label(self.answersFrame, text="Tanteo")
+        self.tanteoLabel = ttk.Label(self.answersFrame, text="T&E")
         self.tanteoLabel.grid(row=0, column=0, pady=10, columnspan=2, sticky="nsew")
 
-        self.biseccionLabel = ttk.Label(self.answersFrame, text="Bisección")
+        self.biseccionLabel = ttk.Label(self.answersFrame, text="Bisection")
         self.biseccionLabel.grid(row=1, column=0, pady=10, columnspan=2, sticky="nsew")
 
-        self.reglaFalsaLabel = ttk.Label(self.answersFrame, text="R. Falsa")
+        self.reglaFalsaLabel = ttk.Label(self.answersFrame, text="R. Falsi")
         self.reglaFalsaLabel.grid(row=2, column=0, pady=10, columnspan=2, sticky="nsew")
 
         self.nRLabel = ttk.Label(self.answersFrame, text="N. R")
         self.nRLabel.grid(row=3, column=0, pady=10, columnspan=2, sticky="nsew")
 
-        self.secanteLabel = ttk.Label(self.answersFrame, text="Secante")
+        self.secanteLabel = ttk.Label(self.answersFrame, text="Secant")
         self.secanteLabel.grid(row=4, column=0, pady=10, columnspan=2, sticky="nsew")
 
         self.steffensenLabel = ttk.Label(self.answersFrame, text="Steffensen")
@@ -197,7 +197,7 @@ class App(ttk.Frame):
 
         self.solveButton = ttk.Button(
             self.buttonFrame,
-            text="Resolver",
+            text="Solve",
             style="Accent.TButton",
             command=self.solve,
         )
@@ -206,7 +206,7 @@ class App(ttk.Frame):
         # Report button
         self.reportButton = ttk.Button(
             self.buttonFrame,
-            text="Reporte",
+            text="Report",
             style="Accent.TButton",
             command=self.getReport,
         )
@@ -307,10 +307,10 @@ class App(ttk.Frame):
     # Show a loading popup
     def show_popup(self):
         self.popup = tk.Toplevel()
-        self.popup.title("Cargando...")
+        self.popup.title("Loading...")
         self.popup.geometry("200x100")
 
-        ttk.Label(self.popup, text="Cargando...").pack(pady=10)
+        ttk.Label(self.popup, text="Loading...").pack(pady=10)
         ttk.Progressbar(self.popup, mode="indeterminate").pack(pady=10)
         self.popup.transient(master=self)
         self.popup.grab_set()
